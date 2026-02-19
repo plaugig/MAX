@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MAX</string>
+    <string name="file">Файлы</string>
+    <string name="galery">Галерея</string>
+    <string name="photo">Камера</string>
+    <string name="massage">Сообщение</string>
+    <string name="hello">Выкладывай кто ты блять такой</string>
+    <string name="go">Начать долбить ass</string>
+    <string name="name">Твое имя</string>
 </resources>
