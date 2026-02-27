@@ -16,7 +16,7 @@
         android:layout_marginStart="30dp" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="хуесос"
@@ -48,19 +48,20 @@
         android:layout_marginEnd="10dp"/>
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/entering_messages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
         android:ems="10"
         android:inputType="text"
+        android:minHeight="48dp"
         android:text="@string/massage"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="28dp"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/add_file"
         android:layout_width="30dp"
         android:layout_height="30dp"
         app:srcCompat="@drawable/add_icon"
@@ -70,7 +71,7 @@
         android:layout_marginStart="32dp"/>
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/send_massage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/arrow_top"
@@ -78,4 +79,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="32dp"
         android:layout_marginEnd="32dp"/>
+
+    <TextView
+        android:id="@+id/online"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="online"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        app:layout_constraintStart_toStartOf="@+id/name"
+        app:layout_constraintEnd_toEndOf="@+id/name"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

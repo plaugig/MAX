@@ -4,14 +4,15 @@ plugins {
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.navigation.safeargs)
+    alias(libs.plugins.google.services)
 }
 
 android {
-    namespace = "com.example.thebestcalculator"
+    namespace = "com.example.max"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.thebestcalculator"
+        applicationId = "com.example.max"
         minSdk = 29
         targetSdk = 35
         versionCode = 1
@@ -52,6 +53,7 @@ dependencies {
     implementation(libs.exp4j)
 
 
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
@@ -71,4 +73,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.auth)
+    implementation(libs.kotlinx.coroutines.play.services)
 }
