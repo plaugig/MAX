@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
     implementation(libs.exp4j)
+    implementation(libs.androidx.lifecycle.livedata)
 
 
 
