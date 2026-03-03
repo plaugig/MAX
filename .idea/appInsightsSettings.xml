@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.max" />
+                  <option name="mobileSdkAppId" value="1:1003009791540:android:813b76da5f59563333dc61" />
+                  <option name="projectId" value="max-messanger" />
+                  <option name="projectNumber" value="1003009791540" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
