@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.exp4j)
     implementation(libs.androidx.lifecycle.livedata)
 
+    implementation(libs.glide)
+
 
 
     // Hilt
