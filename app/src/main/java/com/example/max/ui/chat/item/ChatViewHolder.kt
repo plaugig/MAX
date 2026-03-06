@@ -14,7 +14,7 @@ class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val binding = MessageBinding.bind(itemView)
 
     fun bind(item: ItemMessageData){
-       if (!item.imageUrl.isNullOrEmpty()){
+       if (!item.imageUrl.isNullOrBlank()){
            binding.messageImage.visibility = View.VISIBLE
            Glide.with(itemView.context)
                .load(item.imageUrl)
@@ -23,7 +23,7 @@ class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
            binding.messageImage.visibility = View.GONE
        }
 
-        if (!item.text.isNullOrEmpty()){
+        if (!item.text.isNullOrBlank()){
             binding.messageText.visibility = View.VISIBLE
             binding.messageText.text = item.text
         } else {
@@ -37,6 +37,8 @@ class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
         if(item.isMine){
 
+            constraintSet.setHorizontalBias(binding.messageCard.id, 1.0f)
+
             binding.messageStatus.visibility = View.VISIBLE
 
             val statusIcon = if (item.isSent){
@@ -46,19 +48,17 @@ class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
             }
             binding.messageStatus.setImageResource(statusIcon)
 
-            constraintSet.setHorizontalBias(binding.messageText.id, 1.0f)
-
-            binding.root.backgroundTintList = ColorStateList.valueOf(
+            binding.messageCard.setCardBackgroundColor(
                 ContextCompat.getColor(itemView.context, R.color.purple)
             )
         } else {
-            constraintSet.setHorizontalBias(binding.messageText.id, 0.0f)
-
-            binding.root.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(itemView.context, R.color.blue)
-            )
+            constraintSet.setHorizontalBias(binding.messageCard.id, 0.0f)
 
             binding.messageStatus.visibility = View.GONE
+
+            binding.messageCard.setCardBackgroundColor(
+                ContextCompat.getColor(itemView.context, R.color.blue)
+            )
         }
         constraintSet.applyTo(binding.root)
     }

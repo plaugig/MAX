@@ -1,57 +1,80 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="8dp"
-    android:paddingStart="12dp"
-    android:paddingEnd="8dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="4dp"
-    android:background="@drawable/message_bubble_bg">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp">
 
-    <ImageView
-        android:id="@+id/messageImage"
-        android:layout_width="260dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible"
-        tools:src="@tools:sample/backgrounds/scenic" />
-
-    <TextView
-        android:id="@+id/messageText"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/messageCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/messageImage"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible"
-        tools:text="Привет! Посмотри на это фото." />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/messageTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="21:54"
-        android:textSize="11sp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/messageText"
-        app:layout_constraintHorizontal_bias="1.0" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
 
-    <ImageView
-        android:id="@+id/messageStatus"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="4dp"
-       app:layout_constraintTop_toBottomOf="@id/messageImage"
-        app:layout_constraintStart_toEndOf="@id/messageTime"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:src="@drawable/ic_check_double" />
+            <ImageView
+                android:id="@+id/messageImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="240dp"
+                android:adjustViewBounds="true"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <TextView
+                android:id="@+id/messageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="240dp"
+                app:layout_constrainedWidth="true"
+                android:minWidth="60dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintTop_toBottomOf="@id/messageImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/statusLayout"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                tools:text="Короткое" />
+
+            <LinearLayout
+                android:id="@+id/statusLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/messageTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    tools:text="12:45" />
+
+                <ImageView
+                    android:id="@+id/messageStatus"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="4dp"
+                    tools:src="@drawable/ic_check_double" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
