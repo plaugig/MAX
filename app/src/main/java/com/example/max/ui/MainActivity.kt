@@ -17,34 +17,15 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var repository: MaxRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.nav_host_fragment)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        Log.d("FIREBASE_TEST", "1. onCreate запущен") // Проверка, что до сюда дошли
-
-        lifecycleScope.launch {
-            Log.d("FIREBASE_TEST", "2. Корутина стартовала")
-            try {
-                repository.sendTestMessage()
-                Log.d("FIREBASE_TEST", "3. УСПЕХ!")
-                Toast.makeText(this@MainActivity, "ОТПРАВЛЕНО!", Toast.LENGTH_LONG).show()
-            } catch (e: Exception) {
-                Log.e("FIREBASE_TEST", "3. ОШИБКА: ${e.message}")
-                Toast.makeText(this@MainActivity, "ОШИБКА: ${e.message}", Toast.LENGTH_LONG).show()
-            }
-        }
-
-
     }
-
 }
