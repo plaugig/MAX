@@ -38,5 +38,11 @@ class LocalMaxDataSource @Inject constructor(
         database.userDao().saveUserProfile(save)
     }
 
+    fun gerAllUsers(): Flow<List<UserEntity>>{
+        return database.userDao().getAllUsers()
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
+    }
+
 
 }

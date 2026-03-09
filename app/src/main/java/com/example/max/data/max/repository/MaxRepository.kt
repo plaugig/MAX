@@ -28,6 +28,12 @@ class MaxRepository @Inject constructor(
         }
     }
 
+    fun getAllUser(): Flow<List<UserData>> {
+        return localDataSource.gerAllUsers().map { entities ->
+            entities.toDomain()
+        }
+    }
+
     suspend fun sendMessage(text: String, myUid: String){
         val messageFirebase = MessageFirebase(
             id = UUID.randomUUID().toString(),
@@ -39,6 +45,11 @@ class MaxRepository @Inject constructor(
         remoteDataSource.sendMessage(messageFirebase)
 
         localDataSource.insertMessage(messageFirebase.toEntity())
+    }
+
+    suspend fun saveProfile(userData: UserData){
+        val entity = userData.toEntity()
+        localDataSource.saveProfile(entity)
     }
 
 }

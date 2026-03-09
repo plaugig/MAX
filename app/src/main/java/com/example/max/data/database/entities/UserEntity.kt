@@ -11,7 +11,5 @@ data class UserEntity(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "avatarUrl")
-    val avatarUrl: String,
-    @ColumnInfo(name = "online")
-    val isOnline: Boolean
+    val avatarUrl: String
 )

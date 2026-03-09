@@ -16,4 +16,7 @@ interface UserDao {
 
     @Query("SELECT * FROM user_profile LIMIT 1")
     fun getMyProfile(): Flow<UserEntity?>
+
+    @Query("SELECT * FROM user_profile ")
+    fun getAllUsers(): Flow<List<UserEntity>>
 }

@@ -25,10 +25,20 @@ fun UserEntity.toDomain(): UserData{
         userId = this.userId,
         name = this.name,
         avatarUrl = this.avatarUrl,
-        isOnline = this.isOnline
     )
+}
+
+fun List<UserEntity>.toDomain(): List<UserData> {
+    return this.map { it.toDomain() }
 }
 
 private fun formatTimes(time: Long): String {
     return SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(time))
+}
+fun UserData.toEntity(): UserEntity {
+    return UserEntity(
+        userId = this.userId,
+        name = this.name,
+        avatarUrl = this.avatarUrl ?: ""
+    )
 }

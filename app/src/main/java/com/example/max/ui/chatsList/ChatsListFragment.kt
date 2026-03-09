@@ -2,17 +2,28 @@ package com.example.max.ui.chatsList
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.max.R
+import com.example.max.data.max.UserData
 import com.example.max.databinding.ChatsListFragmentBinding
-import com.example.max.ui.chatsList.item.ItemChatListData
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+
+@AndroidEntryPoint
 class ChatsListFragment : Fragment(R.layout.chats_list_fragment) {
 
     private var _binding: ChatsListFragmentBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: ChatListViewModel by viewModels()
 
     private lateinit var chatsListAdapter: ChatsListAdapter
 
@@ -22,17 +33,27 @@ class ChatsListFragment : Fragment(R.layout.chats_list_fragment) {
 
         setupRecyclerView()
 
-        val testData = listOf(
-            ItemChatListData("1", "Lox Ebany", "Верни деньги заебал"),
-            ItemChatListData("2", "Mentor", "Хули так долга тварь ебаная ?!"),
-            ItemChatListData("3", "Myniga", "а я сегодня буду кушать?")
+        val testUsers = listOf(
+                UserData("1", "Lox Ebany", "https://api.dicebear.com/7.x/avataaars/svg?seed=Lox"),
+        UserData("2", "Mentor", "https://api.dicebear.com/7.x/avataaars/svg?seed=Mentor"),
+        UserData("3", "Myniga", "https://api.dicebear.com/7.x/avataaars/svg?seed=Niga")
         )
-        chatsListAdapter.submitList(testData)
+
+        viewModel.saveTestUsers(testUsers)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.chats.collect { chatsList ->
+                    chatsListAdapter.submitList(chatsList)
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
         chatsListAdapter = ChatsListAdapter { chat ->
-            findNavController().navigate(R.id.action_chats)
+            val bundle = bundleOf("chatId" to chat.id)
+            findNavController().navigate(R.id.action_chats, bundle)
         }
         binding.listOfChat.apply {
             adapter = chatsListAdapter

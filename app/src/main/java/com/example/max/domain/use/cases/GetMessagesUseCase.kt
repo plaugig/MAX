@@ -1,4 +1,4 @@
-package com.example.max.domain
+package com.example.max.domain.use.cases
 
 import com.example.max.data.max.MessageData
 import com.example.max.data.max.repository.MaxRepository

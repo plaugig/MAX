@@ -37,12 +37,13 @@
         android:layout_marginEnd="30dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/massage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/massageRV"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/entering_messages"
         android:layout_marginTop="140dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"/>
@@ -55,7 +56,7 @@
         android:ems="10"
         android:inputType="text"
         android:minHeight="48dp"
-        android:text="@string/massage"
+        android:hint="@string/massage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
