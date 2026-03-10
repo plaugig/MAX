@@ -1,6 +1,6 @@
-package com.example.max.ui.chatsList.item
+package com.example.max.ui.item
 
-data class ItemChatListData(
+data class ItemUserData(
     val id: String,
     val name: String,
     val lastMessage: String,

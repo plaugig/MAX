@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.max.databinding.ChatsMainMenuBinding
 import com.example.max.ui.chatsList.item.ChatsListViewHolder
-import com.example.max.ui.chatsList.item.ItemChatListData
+import com.example.max.ui.item.ItemUserData
 
 class ChatsListAdapter(
-    private val onChatClick: (ItemChatListData) -> Unit
-) : ListAdapter<ItemChatListData, ChatsListViewHolder>(DiffCallback) {
+    private val onChatClick: (ItemUserData) -> Unit
+) : ListAdapter<ItemUserData, ChatsListViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -33,15 +33,15 @@ class ChatsListAdapter(
         holder.bind(getItem(position))
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<ItemChatListData>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<ItemUserData>() {
         override fun areItemsTheSame(
-            oldItem: ItemChatListData,
-            newItem: ItemChatListData
+            oldItem: ItemUserData,
+            newItem: ItemUserData
         ): Boolean = oldItem.id == newItem.id
 
         override fun areContentsTheSame(
-            oldItem: ItemChatListData,
-            newItem: ItemChatListData
+            oldItem: ItemUserData,
+            newItem: ItemUserData
         ): Boolean = oldItem == newItem
 
     }

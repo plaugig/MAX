@@ -22,8 +22,8 @@ class MaxRepository @Inject constructor(
         }
     }
 
-    fun getMyProfile(): Flow<UserData?>{
-        return localDataSource.gerMyProfile().map { entity ->
+    fun getProfile(id: String): Flow<UserData?>{
+        return localDataSource.gerProfile(id).map { entity ->
             entity?.toDomain()
         }
     }

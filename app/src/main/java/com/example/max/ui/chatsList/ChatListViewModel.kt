@@ -2,10 +2,9 @@ package com.example.max.ui.chatsList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.max.data.database.entities.UserEntity
 import com.example.max.data.max.UserData
 import com.example.max.domain.MainInteractor
-import com.example.max.ui.chatsList.item.ItemChatListData
+import com.example.max.ui.item.ItemUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,14 +18,14 @@ import javax.inject.Inject
 class ChatListViewModel @Inject constructor(
     private val interactor: MainInteractor
 ): ViewModel() {
-    val chats: StateFlow<List<ItemChatListData>> = interactor.getChats()
+    val chats: StateFlow<List<ItemUserData>> = interactor.getChats()
         .map { userDataList ->
             userDataList.map { user ->
-                ItemChatListData(
+                ItemUserData(
                     id = user.userId,
                     name = user.name,
                     avatarUrl = user.avatarUrl,
-                    lastMessage = "нажми сука ты такая",
+                    lastMessage = "верни бабки гандон",
                 )
             }
         }

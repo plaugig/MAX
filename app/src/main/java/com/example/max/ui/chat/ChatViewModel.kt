@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.max.domain.MainInteractor
 import com.example.max.ui.chat.item.ItemMessageData
+import com.example.max.ui.item.ItemUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -50,6 +51,14 @@ class ChatViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val chatUser: StateFlow<ItemUserData?> = _chatId
+        .filterNotNull()
+        .flatMapLatest { id ->
+            interactor.get
+        }
+
 
     fun setupChat(id: String){
         _chatId.value = id

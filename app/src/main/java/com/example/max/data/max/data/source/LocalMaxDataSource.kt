@@ -1,7 +1,5 @@
 package com.example.max.data.max.data.source
 
-import android.os.Message
-import androidx.room.Database
 import com.example.max.data.database.AppDatabase
 import com.example.max.data.database.entities.MessageEntity
 import com.example.max.data.database.entities.UserEntity
@@ -28,8 +26,8 @@ class LocalMaxDataSource @Inject constructor(
         database.messageDao().markAsSent(messageId)
     }
 
-    fun gerMyProfile(): Flow<UserEntity?> {
-        return database.userDao().getMyProfile()
+    fun gerProfile(id: String): Flow<UserEntity?> {
+        return database.userDao().getProfile(id)
             .distinctUntilChanged()
             .flowOn(Dispatchers.IO)
     }

@@ -7,14 +7,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetMyProfileUseCase @Inject constructor(
+class GetProfileUserUseCase @Inject constructor(
     private val repository: MaxRepository,
     private val userPrefs: UserPrefs
 ) {
-    operator fun invoke(id: String) : Flow<UserData?> {
-        val myId = userPrefs.getMyID()
-        return repository.getProfile(id).map { user ->
-            user?.copy(isMe = true)
-        }
+    operator fun invoke(chatId: String): Flow<UserData?>{
+         return repository.getProfile(chatId).map { user ->
+             user?.copy(isMe = user.userId == userPrefs.getMyID())
+         }
     }
 }

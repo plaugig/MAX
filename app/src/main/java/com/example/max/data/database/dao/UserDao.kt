@@ -1,6 +1,5 @@
 package com.example.max.data.database.dao
 
-import androidx.navigation.FloatingWindow
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -14,8 +13,8 @@ interface UserDao {
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveUserProfile(user: UserEntity)
 
-    @Query("SELECT * FROM user_profile LIMIT 1")
-    fun getMyProfile(): Flow<UserEntity?>
+    @Query("SELECT * FROM user_profile WHERE userId = :id")
+    fun getProfile(id: String): Flow<UserEntity?>
 
     @Query("SELECT * FROM user_profile ")
     fun getAllUsers(): Flow<List<UserEntity>>

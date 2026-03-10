@@ -5,6 +5,7 @@ import com.example.max.data.max.UserData
 import com.example.max.domain.use.cases.GetChatsUseCase
 import com.example.max.domain.use.cases.GetMessagesUseCase
 import com.example.max.domain.use.cases.GetMyProfileUseCase
+import com.example.max.domain.use.cases.GetProfileUserUseCase
 import com.example.max.domain.use.cases.SaveProfileUseCase
 import com.example.max.domain.use.cases.SendMessageUseCase
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +16,8 @@ class MainInteractor @Inject constructor(
     private val getMessagesUseCase: GetMessagesUseCase,
     private val getChatsUseCase: GetChatsUseCase,
     private val saveProfileUseCase: SaveProfileUseCase,
-    private val getMyProfileUseCase: GetMyProfileUseCase
+    private val getMyProfileUseCase: GetMyProfileUseCase,
+    private val getProfileUserUseCase: GetProfileUserUseCase
 ) {
     suspend fun sendMessage(text: String, myUid: String) {
         return sendMessageUseCase.invoke(text, myUid)
@@ -31,7 +33,10 @@ class MainInteractor @Inject constructor(
 
     suspend fun saveProfile(user: UserData) = saveProfileUseCase(user)
 
-    fun getMyProfile(): Flow<UserData?>{
-        return getMyProfileUseCase.invoke()
+    fun getMyProfile(id: String): Flow<UserData?>{
+        return getMyProfileUseCase.invoke(id)
+    }
+    fun getChatProfile(id: String): Flow<UserData?>{
+        return getProfileUserUseCase.invoke(id)
     }
 }

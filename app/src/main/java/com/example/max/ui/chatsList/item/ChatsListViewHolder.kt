@@ -5,15 +5,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.max.R
 import com.example.max.databinding.ChatsMainMenuBinding
+import com.example.max.ui.item.ItemUserData
 
 class ChatsListViewHolder(
     itemView: View,
-    private val onChatClick : (ItemChatListData) -> Unit
+    private val onChatClick : (ItemUserData) -> Unit
 ): RecyclerView.ViewHolder(itemView) {
 
     private val binding = ChatsMainMenuBinding.bind(itemView)
 
-    fun bind(chat: ItemChatListData){
+    fun bind(chat: ItemUserData){
         binding.name.text = chat.name
         binding.description.text = chat.lastMessage
         Glide.with(itemView)
