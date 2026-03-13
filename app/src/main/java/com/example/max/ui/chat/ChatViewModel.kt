@@ -3,7 +3,7 @@ package com.example.max.ui.chat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.max.domain.MainInteractor
-import com.example.max.ui.chat.item.ItemMessageData
+import com.example.max.ui.item.ItemMessageData
 import com.example.max.ui.item.ItemUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +32,7 @@ class ChatViewModel @Inject constructor(
     val message: StateFlow<List<ItemMessageData>> = _chatId
         .filterNotNull()
         .flatMapLatest { id ->
-            interactor.getMessage(id)
+            interactor.getMessage(id, currentUserId)
         }
         .map { domainList ->
             domainList.map { message ->
@@ -51,13 +51,31 @@ class ChatViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     val chatUser: StateFlow<ItemUserData?> = _chatId
         .filterNotNull()
         .flatMapLatest { id ->
-            interactor.get
+            interactor.getChatProfile(id)
         }
+        .map { domainUser ->
+            domainUser?.let {
+                ItemUserData(
+                    id = it.userId,
+                    name = it.name,
+                    avatarUrl = it.avatarUrl,
+                    lastMessage = "",
+                    isMe = it.isMe
+                )
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
+
+
 
 
     fun setupChat(id: String){
@@ -74,5 +92,17 @@ class ChatViewModel @Inject constructor(
    private fun formatTime(millis: Long): String {
         val sdf = SimpleDateFormat("HH.mm", Locale.getDefault())
         return sdf.format(Date(millis))
+   }
+
+    fun sendImageMessage(uri: String) {
+        val currentChatId = _chatId.value ?: return
+
+        viewModelScope.launch {
+            interactor.sendMessage(
+                text = null,
+                imageUrl = uri,
+                chatId = currentChatId
+            )
+        }
     }
 }

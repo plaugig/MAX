@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.max.databinding.MessageBinding
 import com.example.max.ui.chat.item.ChatViewHolder
-import com.example.max.ui.chat.item.ItemMessageData
+import com.example.max.ui.item.ItemMessageData
 
 class ChatAdapter(): ListAdapter<ItemMessageData, ChatViewHolder>(DiffCallback) {
 

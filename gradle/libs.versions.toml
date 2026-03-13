@@ -22,6 +22,8 @@ googleServices = "4.4.2"
 coroutinesPlayServices = "1.8.1"
 lifecycle = "2.8.0"
 glide = "4.16.0"
+coil = "2.6.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,7 +51,8 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutinesPlayServices" }
 androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
-
+coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage-ktx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

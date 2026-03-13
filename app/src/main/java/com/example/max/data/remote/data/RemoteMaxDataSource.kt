@@ -17,13 +17,21 @@ class RemoteMaxDataSource @Inject constructor(
     private val database: FirebaseDatabase
 ) {
 
-    private val messageRef = database.getReference("messages")
-
-    suspend fun sendMessage(message: MessageFirebase){
-        messageRef.child(message.id).setValue(message).await()
+    suspend fun sendMessage(message: MessageFirebase, chatId: String){
+        database.getReference("chats")
+            .child(chatId)
+            .child("messages")
+            .child(message.id)
+            .setValue(message)
+            .await()
     }
 
-    fun observeMessages(): Flow<List<MessageFirebase>> = callbackFlow {
+    fun observeMessages(chatId: String): Flow<List<MessageFirebase>> = callbackFlow {
+
+        val chatMessageRef = database.getReference("chats")
+            .child(chatId)
+            .child("messages")
+
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val items = snapshot.children.mapNotNull {
@@ -36,9 +44,9 @@ class RemoteMaxDataSource @Inject constructor(
                 close(error.toException())
             }
         }
-        messageRef.addValueEventListener(listener)
+        chatMessageRef.addValueEventListener(listener)
         awaitClose {
-            messageRef.removeEventListener(listener)
+            chatMessageRef.removeEventListener(listener)
         }
     }
 }

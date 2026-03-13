@@ -12,8 +12,8 @@ import javax.inject.Inject
 class LocalMaxDataSource @Inject constructor(
     private val database: AppDatabase
 ) {
-    fun getMessages(): Flow<List<MessageEntity>> {
-        return database.messageDao().getAllMessages()
+    fun getMessages(chatId: String): Flow<List<MessageEntity>> {
+        return database.messageDao().getMessagesByChatId(chatId)
             .distinctUntilChanged()
             .flowOn(Dispatchers.IO)
     }

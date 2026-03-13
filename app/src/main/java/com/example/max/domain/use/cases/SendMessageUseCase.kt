@@ -1,13 +1,31 @@
 package com.example.max.domain.use.cases
 
+import com.example.max.data.max.MessageData
 import com.example.max.data.max.repository.MaxRepository
+import java.util.UUID
 import javax.inject.Inject
 
 class SendMessageUseCase @Inject constructor(
     private val repository: MaxRepository
 ) {
-    suspend operator fun invoke(text: String, myUid: String){
-        if (text.isBlank()) return
-        repository.sendMessage(text, myUid)
+    suspend operator fun invoke(
+        text: String?,
+        chatId: String,
+        imageUrl: String? = null
+    ){
+        if (text.isNullOrBlank() && imageUrl == null) return
+
+        val myUid = repository.getCurrentUserIdFromPrefs()
+
+        val newMessage = MessageData(
+            id = UUID.randomUUID().toString(),
+            senderId = myUid,
+            text = text ?: "",
+            time = System.currentTimeMillis().toString(),
+            imageUrl = imageUrl,
+            isSent = false,
+            isMine = true
+        )
+        repository.sendMessage(newMessage, chatId)
     }
 }

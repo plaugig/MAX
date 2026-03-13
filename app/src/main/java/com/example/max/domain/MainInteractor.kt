@@ -19,12 +19,16 @@ class MainInteractor @Inject constructor(
     private val getMyProfileUseCase: GetMyProfileUseCase,
     private val getProfileUserUseCase: GetProfileUserUseCase
 ) {
-    suspend fun sendMessage(text: String, myUid: String) {
-        return sendMessageUseCase.invoke(text, myUid)
+    suspend fun sendMessage(
+        text: String?,
+        chatId: String,
+        imageUrl: String? = null
+    ) {
+        return sendMessageUseCase.invoke(text, chatId, imageUrl)
     }
 
-    fun getMessage(myUid: String): Flow<List<MessageData>> {
-        return getMessagesUseCase.invoke(myUid)
+    fun getMessage(chatId: String,myUid: String): Flow<List<MessageData>> {
+        return getMessagesUseCase.invoke(chatId,myUid)
     }
 
     fun getChats(): Flow<List<UserData>> {
@@ -33,10 +37,11 @@ class MainInteractor @Inject constructor(
 
     suspend fun saveProfile(user: UserData) = saveProfileUseCase(user)
 
-    fun getMyProfile(id: String): Flow<UserData?>{
+    fun getMyProfile(id: String): Flow<UserData?> {
         return getMyProfileUseCase.invoke(id)
     }
-    fun getChatProfile(id: String): Flow<UserData?>{
+
+    fun getChatProfile(id: String): Flow<UserData?> {
         return getProfileUserUseCase.invoke(id)
     }
 }

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.max.R
 import com.example.max.databinding.MessageBinding
+import com.example.max.ui.item.ItemMessageData
 
 class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
@@ -16,7 +17,7 @@ class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     fun bind(item: ItemMessageData){
        if (!item.imageUrl.isNullOrBlank()){
            binding.messageImage.visibility = View.VISIBLE
-           Glide.with(itemView.context)
+           Glide.with(itemView)
                .load(item.imageUrl)
                .into(binding.messageImage)
        } else {

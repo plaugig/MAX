@@ -1,4 +1,4 @@
-package com.example.max.ui.chat.item
+package com.example.max.ui.item
 
 data class ItemMessageData(
     val id: String,

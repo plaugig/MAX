@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetMessagesUseCase @Inject constructor(
     private val repository: MaxRepository
 ) {
-    operator fun invoke(myUid: String) : Flow<List<MessageData>> {
-        return repository.getMessage(myUid)
+    operator fun invoke(chatId: String, myUid: String) : Flow<List<MessageData>> {
+        return repository.getMessage(chatId,myUid)
     }
 }
