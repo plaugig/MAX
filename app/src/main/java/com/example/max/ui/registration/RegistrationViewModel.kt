@@ -29,6 +29,7 @@ class RegistrationViewModel @Inject constructor(
     private val _state = MutableStateFlow(RegistrationUiState())
     val state: Flow<RegistrationUiState> get() = _state
 
+
     fun signIn(name: String) = viewModelScope.launch(Dispatchers.IO) {
         _state.update { state ->
             state.copy(

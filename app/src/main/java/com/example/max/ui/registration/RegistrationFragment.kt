@@ -63,6 +63,7 @@ class RegistrationFragment : Fragment(R.layout.registration_fragment) {
                 }
             }
         }
+
         binding.singIn.setOnClickListener {
             viewModel.signIn(
                 name = binding.etName.text.toString()
