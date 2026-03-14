@@ -2,20 +2,17 @@ package com.example.max.ui.chatsList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
-import com.example.max.R
 import com.example.max.domain.MainInteractor
 import com.example.max.ui.common.ItemUserData
-import com.example.max.ui.registration.RegistrationEvent
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -27,8 +24,8 @@ class ChatListViewModel @Inject constructor(
     private val interactor: MainInteractor
 ): ViewModel(), ChatListUiActionListener {
 
-    private val _event = MutableSharedFlow<ChatListUiEvent>()
-    val event: SharedFlow<ChatListUiEvent> = _event.asSharedFlow()
+    private val eventChannel = Channel<ChatListUiEvent>()
+    val event: Flow<ChatListUiEvent> = eventChannel.receiveAsFlow()
 
     val chats: StateFlow<List<ItemUserData>> = interactor.getChats()
         .map { userDataList ->
@@ -54,7 +51,7 @@ class ChatListViewModel @Inject constructor(
 
     private fun checkUserAuth() = viewModelScope.launch(Dispatchers.IO) {
         if (Firebase.auth.currentUser == null) {
-            _event.emit(
+            eventChannel.send(
                 ChatListUiEvent.NavigateToRegistration
             )
         }
@@ -62,7 +59,7 @@ class ChatListViewModel @Inject constructor(
 
     override fun openChat(chatId: String) {
         viewModelScope.launch {
-            _event.emit(
+            eventChannel.send(
                 ChatListUiEvent.OpenChat(
                     chatId = chatId
                 )
