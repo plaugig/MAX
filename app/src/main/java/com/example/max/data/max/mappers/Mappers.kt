@@ -1,14 +1,16 @@
-package com.example.max.data.max.repository
+package com.example.max.data.max.mappers
 
 import com.example.max.data.database.entities.MessageEntity
 import com.example.max.data.database.entities.UserEntity
 import com.example.max.data.max.MessageData
 import com.example.max.data.max.UserData
 import com.example.max.data.remote.data.MessageFirebase
+import com.example.max.data.remote.data.UserFirebase
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+// Message
 fun MessageEntity.toDomain(currentUserId: String): MessageData {
     return MessageData(
         id = this.id,
@@ -43,6 +45,8 @@ fun MessageFirebase.toEntity(chatId: String): MessageEntity {
     )
 }
 
+// Users
+
 fun UserEntity.toDomain(): UserData{
     return UserData(
         userId = this.userId,
@@ -59,6 +63,26 @@ fun UserData.toEntity(): UserEntity {
         avatarUrl = this.avatarUrl ?: "",
         lastMessage = this.lastMessage
     )
+}
+
+fun UserData.toFirebaseUser(): UserFirebase {
+    return UserFirebase(
+        userId = this.userId,
+        name = this.name,
+        avatarUrl = this.avatarUrl ?: "",
+    )
+}
+
+fun UserFirebase.toDomain(): UserData{
+    return UserData(
+        userId = this.userId,
+        name = this.name,
+        avatarUrl = this.avatarUrl,
+    )
+}
+
+fun List<UserFirebase>.toDomainListFromFirebase(): List<UserData>{
+    return this.map { it.toDomain() }
 }
 
 fun List<UserEntity>.toDomainList(): List<UserData> {

@@ -5,17 +5,21 @@ import com.example.max.data.max.MessageData
 import com.example.max.data.max.UserData
 import com.example.max.data.max.data.source.LocalMaxDataSource
 import com.example.max.data.remote.data.RemoteMaxDataSource
-import com.example.max.data.remote.data.toEntity
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import androidx.core.net.toUri
+import com.example.max.data.max.mappers.toDomain
+import com.example.max.data.max.mappers.toDomainList
+import com.example.max.data.max.mappers.toDomainListFromFirebase
+import com.example.max.data.max.mappers.toEntity
+import com.example.max.data.max.mappers.toFirebase
+import com.example.max.data.max.mappers.toFirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 
 class MaxRepository @Inject constructor(
     private val localDataSource: LocalMaxDataSource,
@@ -46,6 +50,12 @@ class MaxRepository @Inject constructor(
         }
     }
 
+    fun getAllRemoteUsers(): Flow<List<UserData>>{
+        return remoteDataSource.getAllUsersFromFirebase().map { userFirebases ->
+            userFirebases.toDomainListFromFirebase()
+        }
+    }
+
     suspend fun sendMessage(message: MessageData, chatId: String){
         var messageFirebase = message.toFirebase()
 
@@ -73,6 +83,9 @@ class MaxRepository @Inject constructor(
     suspend fun saveProfile(userData: UserData){
         val entity = userData.toEntity()
         localDataSource.saveProfile(entity)
+
+        val firebase = userData.toFirebaseUser()
+        remoteDataSource.saveUserToFirebase(firebase)
     }
 
     fun getCurrentUserIdFromPrefs(): String {
@@ -90,8 +103,6 @@ class MaxRepository @Inject constructor(
             }
         }
     }
-
-
 }
 
 

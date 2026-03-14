@@ -45,6 +45,4 @@ class LocalMaxDataSource @Inject constructor(
     suspend fun updateLastMessage (userId: String, messageText: String) {
         database.userDao().updateLastMessage(userId, messageText)
     }
-
-
 }

@@ -49,4 +49,32 @@ class RemoteMaxDataSource @Inject constructor(
             chatMessageRef.removeEventListener(listener)
         }
     }
+
+    fun getAllUsersFromFirebase(): Flow<List<UserFirebase>> = callbackFlow {
+        val userRef = database.getReference("users")
+
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val users = snapshot.children.mapNotNull {
+                    it.getValue(UserFirebase :: class.java)
+                }
+                trySend(users)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                close(error.toException())
+            }
+        }
+        userRef.addValueEventListener(listener)
+        awaitClose {
+            userRef.removeEventListener(listener)
+        }
+    }
+
+    suspend fun saveUserToFirebase(user: UserFirebase){
+        database.getReference("users")
+            .child(user.userId)
+            .setValue(user)
+            .await()
+    }
 }

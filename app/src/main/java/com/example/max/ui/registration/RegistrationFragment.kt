@@ -4,14 +4,26 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.max.R
+import com.example.max.data.max.UserData
 import com.example.max.databinding.RegistrationFragmentBinding
+import com.example.max.domain.MainInteractor
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.userProfileChangeRequest
+import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
+import kotlinx.coroutines.launch
 
+
+@AndroidEntryPoint
 class RegistrationFragment : Fragment(R.layout.registration_fragment) {
+
+    @Inject
+    lateinit var interactor: MainInteractor
+
 
     private var _binding: RegistrationFragmentBinding? = null
     private val binding get() = _binding!!
@@ -32,7 +44,6 @@ class RegistrationFragment : Fragment(R.layout.registration_fragment) {
             val auth = Firebase.auth
             auth.signInAnonymously().addOnCompleteListener { task ->
                 if (task.isSuccessful){
-
                     val user = auth.currentUser
 
                     val profileUpdates = userProfileChangeRequest {
@@ -43,7 +54,29 @@ class RegistrationFragment : Fragment(R.layout.registration_fragment) {
                         profileUpdates
                     )?.addOnCompleteListener { profileTask ->
                         if (profileTask.isSuccessful){
-                            findNavController().navigate(R.id.chatsListFragment)
+                            val userData = UserData(
+                                userId = user.uid,
+                                name = name,
+                                avatarUrl = null
+                            )
+
+                            viewLifecycleOwner.lifecycleScope.launch {
+                                try {
+                                    interactor.saveProfile(userData)
+
+                                    findNavController().navigate(R.id.chatsListFragment)
+                                }catch (e: Exception){
+                                    binding.btnStart.isEnabled = true
+                                    Toast.makeText(
+                                        context,
+                                        "Ошибка БД: ${e.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                            }
+
+
                         }
                     }
                 } else {
@@ -56,7 +89,6 @@ class RegistrationFragment : Fragment(R.layout.registration_fragment) {
                 }
             }
         }
-
     }
 
     override fun onDestroyView() {

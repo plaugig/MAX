@@ -11,7 +11,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.max.R
-import com.example.max.data.max.UserData
 import com.example.max.databinding.ChatsListFragmentBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -34,16 +33,15 @@ class ChatsListFragment : Fragment(R.layout.chats_list_fragment) {
         _binding = ChatsListFragmentBinding.bind(view)
 
         val auth = Firebase.auth
-        if (auth.currentUser == null){
+        if (auth.currentUser == null) {
             findNavController().navigate(
                 R.id.action_chatsListFragment_to_registrationFragment
             )
         } else {
             setupRecyclerView()
             setupChatListData()
+            setupListeners()
         }
-
-
     }
 
     private fun setupRecyclerView() {
@@ -57,19 +55,21 @@ class ChatsListFragment : Fragment(R.layout.chats_list_fragment) {
         }
     }
 
-    private fun setupChatListData(){
-        val testUsers = listOf(
-            UserData("1", "Lox Ebany", "https://api.dicebear.com/7.x/avataaars/svg?seed=Lox"),
-            UserData("2", "Mentor", "https://api.dicebear.com/7.x/avataaars/svg?seed=Mentor"),
-            UserData("3", "Myniga", "https://api.dicebear.com/7.x/avataaars/svg?seed=Niga")
-        )
-
+    private fun setupChatListData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.chats.collect { chatsList ->
                     chatsListAdapter.submitList(chatsList)
                 }
             }
+        }
+    }
+
+    private fun setupListeners(){
+        binding.newChatButton.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_chatsListFragment_to_userSearchFragment
+            )
         }
     }
 
