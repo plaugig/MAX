@@ -29,7 +29,6 @@ class MaxRepository @Inject constructor(
     private val storage = FirebaseStorage.getInstance().reference
 
     fun getMessage (chatId: String, myUid: String): Flow<List<MessageData>>{
-
         startObservingMessages(chatId)
 
         return localDataSource.getMessages(chatId).map { entities ->

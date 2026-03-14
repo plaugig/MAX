@@ -43,6 +43,12 @@ class UserSearchViewModel @Inject constructor(
                     lastMessage = null
                 )
             )
+
+            _event.emit(
+                SearchUiEvent.OpenChat(
+                    userId = user.id
+                )
+            )
         }
     }
 }

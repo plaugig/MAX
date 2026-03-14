@@ -1,5 +1,6 @@
 package com.example.max.ui.chat
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.max.domain.MainInteractor
@@ -21,78 +22,39 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val interactor: MainInteractor
-) : ViewModel(){
+) : ViewModel() {
+
+    private val chatId = savedStateHandle.get<String>("chatId")!!
 
     private val currentUserId = "my_test_uid"
 
-    private val _chatId = MutableStateFlow<String?>(null)
 
-    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    val message: StateFlow<List<ItemMessageData>> = _chatId
-        .filterNotNull()
-        .flatMapLatest { id ->
-            interactor.getMessage(id, currentUserId)
-        }
-        .map { domainList ->
-            domainList.map { message ->
-                ItemMessageData(
-                    id = message.id,
-                    text = message.text,
-                    time = formatTime(message.time.toLongOrNull() ?: 0L),
-                    isMine = message.senderId == currentUserId ,
-                    isSent = message.isSent,
-                    imageUrl = message.imageUrl
-                )
-            }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
-    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    val message: StateFlow<List<ItemMessageData>> = interactor.getMessage(
+        chatId = chatId,
+        myUid = currentUserId
+    ).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
-    val chatUser: StateFlow<ItemUserData?> = _chatId
-        .filterNotNull()
-        .flatMapLatest { id ->
-            interactor.getChatProfile(id)
-        }
-        .map { domainUser ->
-            domainUser?.let {
-                ItemUserData(
-                    id = it.userId,
-                    name = it.name,
-                    avatarUrl = it.avatarUrl,
-                    lastMessage = "",
-                    isMe = it.isMe
-                )
-            }
-        }
-        .stateIn(
+    val chatUser: StateFlow<ItemUserData?> = interactor.getChatProfile(
+        id = chatId
+    ).stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = null
         )
 
 
-
-
-    fun setupChat(id: String){
-        _chatId.value = id
-    }
-
-    fun sendMessage (text: String){
+    fun sendMessage(text: String) {
         val currentId = _chatId.value ?: return
         viewModelScope.launch {
             interactor.sendMessage(text, currentId)
         }
     }
-
-   private fun formatTime(millis: Long): String {
-        val sdf = SimpleDateFormat("HH.mm", Locale.getDefault())
-        return sdf.format(Date(millis))
-   }
 
     fun sendImageMessage(uri: String) {
         val currentChatId = _chatId.value ?: return

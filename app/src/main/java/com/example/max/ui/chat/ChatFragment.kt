@@ -1,7 +1,9 @@
 package com.example.max.ui.chat
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,7 +22,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class ChatFragment: Fragment(R.layout.chat_fragment) {
+class ChatFragment: Fragment() {
 
     private var _binding: ChatFragmentBinding? = null
     private val binding get() = _binding!!
@@ -30,13 +32,16 @@ class ChatFragment: Fragment(R.layout.chat_fragment) {
 
     private var selectedImageUri: String? = null
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = ChatFragmentBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _binding = ChatFragmentBinding.bind(view)
-
-        val chatId = arguments?.getString("chatId") ?: ""
-        viewModel.setupChat(chatId)
-
         setupRecyclerView()
 
         viewLifecycleOwner.lifecycleScope.launch {

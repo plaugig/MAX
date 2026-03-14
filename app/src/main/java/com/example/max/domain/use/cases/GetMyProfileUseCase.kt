@@ -13,8 +13,9 @@ class GetMyProfileUseCase @Inject constructor(
 ) {
     operator fun invoke(id: String) : Flow<UserData?> {
         val myId = userPrefs.getMyID()
+
         return repository.getProfile(id).map { user ->
-            user?.copy(isMe = true)
+            user?.copy(isMe = myId == id)
         }
     }
 }
