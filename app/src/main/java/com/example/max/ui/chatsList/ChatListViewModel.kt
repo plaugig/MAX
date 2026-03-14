@@ -25,7 +25,7 @@ class ChatListViewModel @Inject constructor(
                     id = user.userId,
                     name = user.name,
                     avatarUrl = user.avatarUrl,
-                    lastMessage = "верни бабки гандон",
+                    lastMessage = user.lastMessage ?:"сообщений нет"
                 )
             }
         }
@@ -35,11 +35,4 @@ class ChatListViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun saveTestUsers(users: List<UserData>) {
-        viewModelScope.launch {
-            users.forEach { user ->
-                interactor.saveProfile(user)
-            }
-        }
-    }
 }

@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.max.R
 import com.example.max.data.max.UserData
 import com.example.max.databinding.ChatsListFragmentBinding
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -31,23 +33,17 @@ class ChatsListFragment : Fragment(R.layout.chats_list_fragment) {
         super.onViewCreated(view, savedInstanceState)
         _binding = ChatsListFragmentBinding.bind(view)
 
-        setupRecyclerView()
-
-        val testUsers = listOf(
-                UserData("1", "Lox Ebany", "https://api.dicebear.com/7.x/avataaars/svg?seed=Lox"),
-        UserData("2", "Mentor", "https://api.dicebear.com/7.x/avataaars/svg?seed=Mentor"),
-        UserData("3", "Myniga", "https://api.dicebear.com/7.x/avataaars/svg?seed=Niga")
-        )
-
-        viewModel.saveTestUsers(testUsers)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.chats.collect { chatsList ->
-                    chatsListAdapter.submitList(chatsList)
-                }
-            }
+        val auth = Firebase.auth
+        if (auth.currentUser == null){
+            findNavController().navigate(
+                R.id.action_chatsListFragment_to_registrationFragment
+            )
+        } else {
+            setupRecyclerView()
+            setupChatListData()
         }
+
+
     }
 
     private fun setupRecyclerView() {
@@ -58,6 +54,22 @@ class ChatsListFragment : Fragment(R.layout.chats_list_fragment) {
         binding.listOfChat.apply {
             adapter = chatsListAdapter
             layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
+    private fun setupChatListData(){
+        val testUsers = listOf(
+            UserData("1", "Lox Ebany", "https://api.dicebear.com/7.x/avataaars/svg?seed=Lox"),
+            UserData("2", "Mentor", "https://api.dicebear.com/7.x/avataaars/svg?seed=Mentor"),
+            UserData("3", "Myniga", "https://api.dicebear.com/7.x/avataaars/svg?seed=Niga")
+        )
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.chats.collect { chatsList ->
+                    chatsListAdapter.submitList(chatsList)
+                }
+            }
         }
     }
 

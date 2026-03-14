@@ -42,7 +42,7 @@ class MaxRepository @Inject constructor(
 
     fun getAllUser(): Flow<List<UserData>> {
         return localDataSource.gerAllUsers().map { entities ->
-            entities.toDomain()
+            entities.toDomainList()
         }
     }
 
@@ -65,6 +65,9 @@ class MaxRepository @Inject constructor(
 
         remoteDataSource.sendMessage(messageFirebase, chatId)
         localDataSource.insertMessage(messageFirebase.toEntity(chatId)  )
+
+        localDataSource.updateLastMessage(chatId, message.text)
+
     }
 
     suspend fun saveProfile(userData: UserData){
@@ -81,6 +84,8 @@ class MaxRepository @Inject constructor(
             remoteDataSource.observeMessages(chatId).collect { firebasesMessage ->
                 firebasesMessage.forEach { msg ->
                     localDataSource.insertMessage(msg.toEntity(chatId))
+
+                    localDataSource.updateLastMessage(chatId,msg.text)
                 }
             }
         }

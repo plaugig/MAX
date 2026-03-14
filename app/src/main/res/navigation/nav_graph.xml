@@ -11,10 +11,10 @@
         <action
             android:id="@+id/action_chats"
             app:destination="@id/chatFragment" />
-        <action
-            android:id="@+id/action_chatsListFragment"
-            app:destination="@id/chatsListFragment" />
-    </fragment>
+    <action
+        android:id="@+id/action_chatsListFragment_to_registrationFragment"
+        app:destination="@id/registrationFragment" />
+</fragment>
 
         <fragment
             android:id="@+id/chatFragment"

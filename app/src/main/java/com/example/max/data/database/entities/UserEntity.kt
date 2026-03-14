@@ -11,5 +11,7 @@ data class UserEntity(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "avatarUrl")
-    val avatarUrl: String
+    val avatarUrl: String,
+    @ColumnInfo(name = "lastMessage")
+    val lastMessage: String? = null
 )

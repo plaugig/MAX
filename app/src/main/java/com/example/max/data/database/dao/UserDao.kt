@@ -18,4 +18,7 @@ interface UserDao {
 
     @Query("SELECT * FROM user_profile ")
     fun getAllUsers(): Flow<List<UserEntity>>
+
+    @Query("UPDATE user_profile SET lastMessage = :messageText WHERE userId = :userId")
+    suspend fun updateLastMessage(userId: String, messageText: String)
 }
