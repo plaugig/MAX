@@ -1,8 +1,10 @@
 package com.example.max.ui.searchChat
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.example.max.databinding.UserSearchBinding
 import com.example.max.ui.item.ItemUserData
 import com.example.max.ui.searchChat.item.UserSearchViewHolder
 
@@ -14,7 +16,13 @@ class UserSearchAdapter(
         parent: ViewGroup,
         viewType: Int
     ): UserSearchViewHolder {
-        return UserSearchViewHolder(parent, listener)
+        val binding = UserSearchBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+
+        return UserSearchViewHolder(binding.root, listener)
     }
 
     override fun onBindViewHolder(
