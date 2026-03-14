@@ -5,11 +5,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.max.R
 import com.example.max.databinding.ChatsMainMenuBinding
+import com.example.max.ui.chatsList.ChatListViewModel
 import com.example.max.ui.common.ItemUserData
 
 class ChatsListViewHolder(
     itemView: View,
-    private val onChatClick : (ItemUserData) -> Unit
+    private val listener: ChatListViewModel
 ): RecyclerView.ViewHolder(itemView) {
 
     private val binding = ChatsMainMenuBinding.bind(itemView)
@@ -17,6 +18,7 @@ class ChatsListViewHolder(
     fun bind(chat: ItemUserData){
         binding.name.text = chat.name
         binding.description.text = chat.lastMessage
+
         Glide.with(itemView)
             .load(chat.avatarUrl)
             .placeholder(R.drawable.lox)
@@ -24,7 +26,7 @@ class ChatsListViewHolder(
             .into(binding.avatar)
 
         binding.root.setOnClickListener {
-            onChatClick(chat)
+            listener.openChat(chat.id)
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.example.max.ui.chatsList
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,14 +14,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.max.R
 import com.example.max.databinding.ChatsListFragmentBinding
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class ChatsListFragment : Fragment(R.layout.chats_list_fragment) {
+class ChatsListFragment : Fragment() {
 
     private var _binding: ChatsListFragmentBinding? = null
     private val binding get() = _binding!!
@@ -28,41 +28,55 @@ class ChatsListFragment : Fragment(R.layout.chats_list_fragment) {
 
     private lateinit var chatsListAdapter: ChatsListAdapter
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _binding = ChatsListFragmentBinding.bind(view)
 
-        val auth = Firebase.auth
-        if (auth.currentUser == null) {
-            findNavController().navigate(
-                R.id.action_chatsListFragment_to_registrationFragment
-            )
-        } else {
-            setupRecyclerView()
-            setupChatListData()
-            setupListeners()
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = ChatsListFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private fun setupRecyclerView() {
-        chatsListAdapter = ChatsListAdapter { chat ->
-            val bundle = bundleOf("chatId" to chat.id)
-            findNavController().navigate(R.id.action_chats, bundle)
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        chatsListAdapter = ChatsListAdapter(
+            listener = viewModel
+        )
         binding.listOfChat.apply {
             adapter = chatsListAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-    }
 
-    private fun setupChatListData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.chats.collect { chatsList ->
-                    chatsListAdapter.submitList(chatsList)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.event.collect { event ->
+                        when (event) {
+                            is ChatListUiEvent.NavigateToRegistration -> {
+                                findNavController().navigate(
+                                    R.id.action_chatsListFragment_to_registrationFragment
+                                )
+                            }
+
+                            is ChatListUiEvent.OpenChat -> {
+                                findNavController().navigate(
+                                    R.id.action_chats,
+                                    bundleOf("chatId" to event.chatId)
+                                )
+                            }
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.chats.collect { chatsList ->
+                        chatsListAdapter.submitList(chatsList)
+                    }
                 }
             }
         }
+
+        setupListeners()
     }
 
     private fun setupListeners(){

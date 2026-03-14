@@ -31,7 +31,7 @@ class RegistrationFragment : Fragment(R.layout.registration_fragment) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = RegistrationFragmentBinding.inflate(inflater)
+        _binding = RegistrationFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 

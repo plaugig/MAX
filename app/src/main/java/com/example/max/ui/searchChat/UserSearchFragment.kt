@@ -33,7 +33,7 @@ class UserSearchFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = UserSearchFragmentBinding.inflate(inflater)
+        _binding = UserSearchFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -41,7 +41,7 @@ class UserSearchFragment: Fragment() {
         searchAdapter = UserSearchAdapter(
             listener = viewModel
         )
-        
+
         binding.rvUserList.apply {
             adapter = searchAdapter
             layoutManager = LinearLayoutManager(requireContext())

@@ -10,7 +10,7 @@ import com.example.max.ui.chatsList.item.ChatsListViewHolder
 import com.example.max.ui.common.ItemUserData
 
 class ChatsListAdapter(
-    private val onChatClick: (ItemUserData) -> Unit
+    private val listener: ChatListViewModel
 ) : ListAdapter<ItemUserData, ChatsListViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(
@@ -22,8 +22,11 @@ class ChatsListAdapter(
             parent,
             false
         )
-        return ChatsListViewHolder(binding.root, onChatClick)
 
+        return ChatsListViewHolder(
+            itemView = binding.root,
+            listener = listener
+        )
     }
 
     override fun onBindViewHolder(
