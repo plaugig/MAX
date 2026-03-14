@@ -1,94 +1,81 @@
 package com.example.max.ui.registration
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.max.R
-import com.example.max.data.UserData
 import com.example.max.databinding.RegistrationFragmentBinding
-import com.example.max.domain.MainInteractor
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.auth.userProfileChangeRequest
 import dagger.hilt.android.AndroidEntryPoint
-import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class RegistrationFragment : Fragment(R.layout.registration_fragment) {
 
-    @Inject
-    lateinit var interactor: MainInteractor
-
-
     private var _binding: RegistrationFragmentBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: RegistrationViewModel by viewModels()
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = RegistrationFragmentBinding.inflate(inflater)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _binding = RegistrationFragmentBinding.bind(view)
-
-        binding.btnStart.setOnClickListener {
-            val name = binding.etName.text.toString().trim()
-
-            if (name.isEmpty()) {
-                binding.inputNameLayout.error = getString(R.string.error)
-                return@setOnClickListener
-            }
-            binding.btnStart.isEnabled = false
-
-            val auth = Firebase.auth
-            auth.signInAnonymously().addOnCompleteListener { task ->
-                if (task.isSuccessful){
-                    val user = auth.currentUser
-
-                    val profileUpdates = userProfileChangeRequest {
-                        displayName = name
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.state.collect { state ->
+                        binding.singIn.isEnabled = !state.isSingUpButtonLoading
                     }
+                }
 
-                    user?.updateProfile(
-                        profileUpdates
-                    )?.addOnCompleteListener { profileTask ->
-                        if (profileTask.isSuccessful){
-                            val userData = UserData(
-                                userId = user.uid,
-                                name = name,
-                                avatarUrl = null
-                            )
-
-                            viewLifecycleOwner.lifecycleScope.launch {
-                                try {
-                                    interactor.saveProfile(userData)
-
-                                    findNavController().navigate(R.id.chatsListFragment)
-                                }catch (e: Exception){
-                                    binding.btnStart.isEnabled = true
-                                    Toast.makeText(
-                                        context,
-                                        "Ошибка БД: ${e.message}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-
+                launch {
+                    viewModel.event.collect { event ->
+                        when (event) {
+                            is RegistrationEvent.EmptyName -> {
+                                binding.inputNameLayout.error = getString(R.string.error)
                             }
 
+                            is RegistrationEvent.Error -> {
+                                showError(event.message)
+                            }
 
+                            is RegistrationEvent.CompleteRegistration -> {
+                                findNavController().navigate(R.id.chatsListFragment)
+                            }
                         }
                     }
-                } else {
-                   binding.btnStart.isEnabled = true
-                    Toast.makeText(
-                        context,
-                        "Ошибка: ${task.exception?.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }
         }
+        binding.singIn.setOnClickListener {
+            viewModel.signIn(
+                name = binding.etName.text.toString()
+            )
+        }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(
+            context,
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     override fun onDestroyView() {
