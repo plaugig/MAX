@@ -9,7 +9,9 @@ import com.example.max.domain.use.cases.GetMyProfileUseCase
 import com.example.max.domain.use.cases.GetProfileUserUseCase
 import com.example.max.domain.use.cases.SaveProfileUseCase
 import com.example.max.domain.use.cases.SendMessageUseCase
+import com.example.max.ui.item.ItemUserData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MainInteractor @Inject constructor(
@@ -37,7 +39,18 @@ class MainInteractor @Inject constructor(
         return getChatsUseCase.invoke()
     }
 
-    fun getAllRemoteUsers(): Flow<List<UserData>> = getAllRemoteUsersUseCase()
+    fun getAllRemoteUsers(): Flow<List<ItemUserData>> {
+        return getAllRemoteUsersUseCase().map { userDataList ->
+            userDataList.map { user ->
+                ItemUserData(
+                    id = user.userId,
+                    name = user.name,
+                    avatarUrl = user.avatarUrl,
+                    lastMessage = null
+                )
+            }
+        }
+    }
 
     suspend fun saveProfile(user: UserData) = saveProfileUseCase(user)
 

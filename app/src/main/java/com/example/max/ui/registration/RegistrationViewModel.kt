@@ -23,7 +23,7 @@ class RegistrationViewModel @Inject constructor(
     private val saveProfileUseCase: SaveProfileUseCase
 ) : ViewModel() {
 
-    private val _event = MutableSharedFlow<RegistrationEvent>(extraBufferCapacity = 1)
+    private val _event = MutableSharedFlow<RegistrationEvent>()
     val event: SharedFlow<RegistrationEvent> = _event.asSharedFlow()
 
     private val _state = MutableStateFlow(RegistrationUiState())

@@ -1,7 +1,9 @@
 package com.example.max.ui.searchChat
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,48 +19,62 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class UserSearchFragment: Fragment(R.layout.user_search_fragment) {
+class UserSearchFragment: Fragment() {
+
     private var _binding: UserSearchFragmentBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: UserSearchViewModel by viewModels()
     private lateinit var searchAdapter: UserSearchAdapter
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _binding = UserSearchFragmentBinding.bind(view)
 
-        setupRecyclerView()
-        setupObservers()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = UserSearchFragmentBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        searchAdapter = UserSearchAdapter(
+            listener = viewModel
+        )
+        
+        binding.rvUserList.apply {
+            adapter = searchAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.event.collect { event ->
+                        when (event) {
+                            is SearchUiEvent.OpenChat -> {
+                                findNavController().navigate(
+                                    R.id.action_userSearchFragment_to_chatFragment,
+                                    bundleOf("chatId" to event.userId)
+                                )
+                            }
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.users.collect { userList ->
+                        searchAdapter.submitList(userList)
+                    }
+                }
+            }
+        }
 
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
-    private fun setupRecyclerView(){
-        searchAdapter = UserSearchAdapter { selectedUser ->
-            viewModel.createChat(selectedUser)
 
-            val bindle = bundleOf("chatId" to selectedUser.id)
-            findNavController().navigate(
-                R.id.action_userSearchFragment_to_chatFragment,
-                bindle
-            )
-        }
-        binding.rvUserList.apply {
-            adapter = searchAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
-    }
-    private fun setupObservers(){
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.users.collect { userList ->
-                    searchAdapter.submitList(userList)
-                }
-            }
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

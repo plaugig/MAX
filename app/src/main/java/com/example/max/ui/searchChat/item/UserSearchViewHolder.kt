@@ -6,11 +6,13 @@ import com.bumptech.glide.Glide
 import com.example.max.R
 import com.example.max.databinding.UserSearchBinding
 import com.example.max.ui.item.ItemUserData
+import com.example.max.ui.searchChat.SearchUiActionListener
 
 class UserSearchViewHolder(
     itemView: View,
-    private val onUserClick: (ItemUserData) -> Unit
+    private val listener: SearchUiActionListener
 ): RecyclerView.ViewHolder(itemView) {
+
     private val binding = UserSearchBinding.bind(itemView)
 
     fun bind(user: ItemUserData){
@@ -24,7 +26,7 @@ class UserSearchViewHolder(
             .into(binding.ivUserAvatar)
 
         binding.root.setOnClickListener {
-            onUserClick(user)
+            listener.openChat(user)
         }
     }
 }

@@ -7,9 +7,12 @@ import com.example.max.data.UserData
 import com.example.max.domain.MainInteractor
 import com.example.max.ui.item.ItemUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,35 +21,28 @@ import javax.inject.Inject
 @HiltViewModel
 class UserSearchViewModel @Inject constructor(
     private val interactor: MainInteractor
-): ViewModel() {
+) : ViewModel(), SearchUiActionListener {
+
+    private val _event = MutableSharedFlow<SearchUiEvent>()
+    val event: SharedFlow<SearchUiEvent> = _event.asSharedFlow()
 
     val users: StateFlow<List<ItemUserData>> = interactor.getAllRemoteUsers()
-        .map { userDataList ->
-            userDataList.map { user ->
-                ItemUserData(
-                    id = user.userId,
-                    name = user.name,
-                    avatarUrl = user.avatarUrl,
-                    lastMessage = null
-                )
-            }
-        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
 
-    fun createChat(item: ItemUserData){
-        viewModelScope.launch {
-            val userData = UserData(
-                userId = item.id,
-                name = item.name,
-                avatarUrl = item.avatarUrl,
-                lastMessage = null,
-
+    override fun openChat(user: ItemUserData) {
+        viewModelScope.launch(Dispatchers.IO) {
+            interactor.saveProfile(
+                user = UserData(
+                    userId = user.id,
+                    name = user.name,
+                    avatarUrl = user.avatarUrl,
+                    lastMessage = null
+                )
             )
-            interactor.saveProfile(userData)
         }
     }
 }
