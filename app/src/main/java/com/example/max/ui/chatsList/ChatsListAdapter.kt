@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.max.databinding.ChatsMainMenuBinding
 import com.example.max.ui.chatsList.item.ChatsListViewHolder
-import com.example.max.ui.item.ItemUserData
+import com.example.max.ui.common.ItemUserData
 
 class ChatsListAdapter(
     private val onChatClick: (ItemUserData) -> Unit

@@ -1,4 +1,4 @@
-package com.example.max.ui.item
+package com.example.max.ui.common
 
 data class ItemMessageData(
     val id: String,

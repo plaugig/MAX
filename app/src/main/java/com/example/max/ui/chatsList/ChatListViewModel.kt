@@ -3,7 +3,7 @@ package com.example.max.ui.chatsList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.max.domain.MainInteractor
-import com.example.max.ui.item.ItemUserData
+import com.example.max.ui.common.ItemUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

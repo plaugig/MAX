@@ -1,6 +1,5 @@
 package com.example.max.ui.chat.item
 
-import android.content.res.ColorStateList
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -8,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.max.R
 import com.example.max.databinding.MessageBinding
-import com.example.max.ui.item.ItemMessageData
+import com.example.max.ui.common.ItemMessageData
 
 class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 

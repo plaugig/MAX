@@ -3,8 +3,8 @@ package com.example.max.ui.chat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.max.domain.MainInteractor
-import com.example.max.ui.item.ItemMessageData
-import com.example.max.ui.item.ItemUserData
+import com.example.max.ui.common.ItemMessageData
+import com.example.max.ui.common.ItemUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

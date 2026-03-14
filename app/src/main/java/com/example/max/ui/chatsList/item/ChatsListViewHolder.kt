@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.max.R
 import com.example.max.databinding.ChatsMainMenuBinding
-import com.example.max.ui.item.ItemUserData
+import com.example.max.ui.common.ItemUserData
 
 class ChatsListViewHolder(
     itemView: View,
