@@ -13,17 +13,17 @@ class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     private val binding = MessageBinding.bind(itemView)
 
-    fun bind(item: ItemMessageData){
-       if (!item.imageUrl.isNullOrBlank()){
-           binding.messageImage.visibility = View.VISIBLE
-           Glide.with(itemView)
-               .load(item.imageUrl)
-               .into(binding.messageImage)
-       } else {
-           binding.messageImage.visibility = View.GONE
-       }
+    fun bind(item: ItemMessageData) {
+        if (!item.imageUrl.isNullOrBlank()) {
+            binding.messageImage.visibility = View.VISIBLE
+            Glide.with(itemView)
+                .load(item.imageUrl)
+                .into(binding.messageImage)
+        } else {
+            binding.messageImage.visibility = View.GONE
+        }
 
-        if (!item.text.isNullOrBlank()){
+        if (item.text.isNotBlank()) {
             binding.messageText.visibility = View.VISIBLE
             binding.messageText.text = item.text
         } else {
@@ -35,13 +35,28 @@ class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val constraintSet = ConstraintSet()
         constraintSet.clone(binding.root)
 
-        if(item.isMine){
+        constraintSet.clear(binding.messageCard.id, ConstraintSet.START)
+        constraintSet.clear(binding.messageCard.id, ConstraintSet.END)
+        constraintSet.connect(
+            binding.messageCard.id,
+            ConstraintSet.START,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.START
+        )
+        constraintSet.connect(
+            binding.messageCard.id,
+            ConstraintSet.END,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.END
+        )
+
+        if (item.isMine) {
 
             constraintSet.setHorizontalBias(binding.messageCard.id, 1.0f)
 
             binding.messageStatus.visibility = View.VISIBLE
 
-            val statusIcon = if (item.isSent){
+            val statusIcon = if (item.isSent) {
                 R.drawable.ic_check_double
             } else {
                 R.drawable.ic_status_pending
