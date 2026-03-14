@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class RegistrationFragment : Fragment(R.layout.registration_fragment) {
+class RegistrationFragment : Fragment() {
 
     private var _binding: RegistrationFragmentBinding? = null
     private val binding get() = _binding!!
