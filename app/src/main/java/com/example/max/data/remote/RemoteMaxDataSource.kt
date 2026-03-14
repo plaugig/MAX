@@ -1,8 +1,5 @@
-package com.example.max.data.remote.data
+package com.example.max.data.remote
 
-import android.icu.util.ValueIterator
-import android.os.Message
-import android.view.inputmethod.TextSnapshot
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase

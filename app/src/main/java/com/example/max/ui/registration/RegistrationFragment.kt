@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.max.R
-import com.example.max.data.max.UserData
+import com.example.max.data.UserData
 import com.example.max.databinding.RegistrationFragmentBinding
 import com.example.max.domain.MainInteractor
 import com.google.firebase.Firebase

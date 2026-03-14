@@ -3,7 +3,7 @@ package com.example.max.ui.searchChat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.max.data.max.UserData
+import com.example.max.data.UserData
 import com.example.max.domain.MainInteractor
 import com.example.max.ui.item.ItemUserData
 import dagger.hilt.android.lifecycle.HiltViewModel

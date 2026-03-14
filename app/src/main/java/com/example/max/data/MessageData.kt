@@ -1,4 +1,4 @@
-package com.example.max.data.max
+package com.example.max.data
 
 data class MessageData(
     val id: String,

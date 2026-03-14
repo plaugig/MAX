@@ -1,7 +1,7 @@
 package com.example.max.domain
 
-import com.example.max.data.max.MessageData
-import com.example.max.data.max.UserData
+import com.example.max.data.MessageData
+import com.example.max.data.UserData
 import com.example.max.domain.use.cases.GetAllRemoteUsersUseCase
 import com.example.max.domain.use.cases.GetChatsUseCase
 import com.example.max.domain.use.cases.GetMessagesUseCase

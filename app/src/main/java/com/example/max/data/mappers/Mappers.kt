@@ -1,11 +1,11 @@
-package com.example.max.data.max.mappers
+package com.example.max.data.mappers
 
+import com.example.max.data.MessageData
+import com.example.max.data.UserData
 import com.example.max.data.database.entities.MessageEntity
 import com.example.max.data.database.entities.UserEntity
-import com.example.max.data.max.MessageData
-import com.example.max.data.max.UserData
-import com.example.max.data.remote.data.MessageFirebase
-import com.example.max.data.remote.data.UserFirebase
+import com.example.max.data.remote.MessageFirebase
+import com.example.max.data.remote.UserFirebase
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -18,7 +18,7 @@ fun MessageEntity.toDomain(currentUserId: String): MessageData {
         senderId = this.senderId,
         time = formatTimes(this.timestamp),
         imageUrl = this.imageUrl,
-        isMine = this.senderId == currentUserId ,
+        isMine = this.senderId == currentUserId,
         isSent = this.isSent
     )
 }
@@ -47,7 +47,7 @@ fun MessageFirebase.toEntity(chatId: String): MessageEntity {
 
 // Users
 
-fun UserEntity.toDomain(): UserData{
+fun UserEntity.toDomain(): UserData {
     return UserData(
         userId = this.userId,
         name = this.name,
@@ -73,7 +73,7 @@ fun UserData.toFirebaseUser(): UserFirebase {
     )
 }
 
-fun UserFirebase.toDomain(): UserData{
+fun UserFirebase.toDomain(): UserData {
     return UserData(
         userId = this.userId,
         name = this.name,
@@ -92,5 +92,3 @@ fun List<UserEntity>.toDomainList(): List<UserData> {
 private fun formatTimes(time: Long): String {
     return SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(time))
 }
-
-

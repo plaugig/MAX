@@ -1,4 +1,4 @@
-package com.example.max.data.remote.data
+package com.example.max.data.remote
 
 data class UserFirebase(
     val userId: String = "",

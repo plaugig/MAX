@@ -1,4 +1,4 @@
-package com.example.max.data.max.data.source
+package com.example.max.data.source
 
 import com.example.max.data.database.AppDatabase
 import com.example.max.data.database.entities.MessageEntity

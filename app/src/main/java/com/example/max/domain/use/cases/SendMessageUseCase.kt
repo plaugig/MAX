@@ -1,7 +1,7 @@
 package com.example.max.domain.use.cases
 
-import com.example.max.data.max.MessageData
-import com.example.max.data.max.repository.MaxRepository
+import com.example.max.data.MessageData
+import com.example.max.data.repository.MaxRepository
 import java.util.UUID
 import javax.inject.Inject
 
