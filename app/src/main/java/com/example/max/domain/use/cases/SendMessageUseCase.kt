@@ -11,8 +11,9 @@ class SendMessageUseCase @Inject constructor(
     suspend operator fun invoke(
         text: String?,
         chatId: String,
+        peerUserId: String,
         imageUrl: String? = null
-    ){
+    ) {
         if (text.isNullOrBlank() && imageUrl == null) return
 
         val myUid = repository.getCurrentUserIdFromPrefs()
@@ -26,6 +27,6 @@ class SendMessageUseCase @Inject constructor(
             isSent = false,
             isMine = true
         )
-        repository.sendMessage(newMessage, chatId)
+        repository.sendMessage(newMessage, chatId, peerUserId)
     }
 }

@@ -7,17 +7,10 @@ import com.example.max.domain.MainInteractor
 import com.example.max.ui.common.ItemMessageData
 import com.example.max.ui.common.ItemUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,13 +19,17 @@ class ChatViewModel @Inject constructor(
     private val interactor: MainInteractor
 ) : ViewModel() {
 
-    private val chatId = savedStateHandle.get<String>("chatId")!!
+    private val threadId = savedStateHandle.get<String>("threadId")
+        ?: savedStateHandle.get<String>("chatId")
+        ?: error("threadId is required")
+    private val peerUserId = savedStateHandle.get<String>("peerUserId")
+        ?: savedStateHandle.get<String>("chatId")
+        ?: error("peerUserId is required")
 
-    private val currentUserId = "my_test_uid"
-
+    private val currentUserId = interactor.getCurrentUserId()
 
     val message: StateFlow<List<ItemMessageData>> = interactor.getMessage(
-        chatId = chatId,
+        chatId = threadId,
         myUid = currentUserId
     ).stateIn(
         scope = viewModelScope,
@@ -41,29 +38,30 @@ class ChatViewModel @Inject constructor(
     )
 
     val chatUser: StateFlow<ItemUserData?> = interactor.getChatProfile(
-        id = chatId
+        id = peerUserId
     ).stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
-        )
-
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
 
     fun sendMessage(text: String) {
-        val currentId = chatId
         viewModelScope.launch {
-            interactor.sendMessage(text, currentId)
+            interactor.sendMessage(
+                text = text,
+                chatId = threadId,
+                peerUserId = peerUserId
+            )
         }
     }
 
     fun sendImageMessage(uri: String) {
-        val currentChatId = chatId
-
         viewModelScope.launch {
             interactor.sendMessage(
                 text = null,
                 imageUrl = uri,
-                chatId = currentChatId
+                chatId = threadId,
+                peerUserId = peerUserId
             )
         }
     }

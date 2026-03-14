@@ -5,5 +5,6 @@ data class ItemUserData(
     val name: String,
     val lastMessage: String?,
     val avatarUrl : String? = null,
-    val isMe: Boolean = false
+    val isMe: Boolean = false,
+    val threadId: String? = null
 )

@@ -13,4 +13,8 @@ class SaveProfileUseCase @Inject constructor(
         repository.saveProfile(user)
         userPrefs.saveMyId(user.userId)
     }
+
+    fun getCurrentUserId(): String {
+        return userPrefs.getMyID()
+    }
 }

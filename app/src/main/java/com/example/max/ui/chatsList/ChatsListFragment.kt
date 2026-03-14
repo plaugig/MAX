@@ -61,7 +61,10 @@ class ChatsListFragment : Fragment() {
                             is ChatListUiEvent.OpenChat -> {
                                 findNavController().navigate(
                                     R.id.action_chats,
-                                    bundleOf("chatId" to event.chatId)
+                                    bundleOf(
+                                        "threadId" to event.threadId,
+                                        "peerUserId" to event.peerUserId
+                                    )
                                 )
                             }
                         }

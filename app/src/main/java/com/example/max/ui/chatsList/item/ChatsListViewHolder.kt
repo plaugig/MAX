@@ -26,7 +26,10 @@ class ChatsListViewHolder(
             .into(binding.avatar)
 
         binding.root.setOnClickListener {
-            listener.openChat(chat.id)
+            listener.openChat(
+                threadId = chat.threadId ?: chat.id,
+                peerUserId = chat.id
+            )
         }
     }
 }

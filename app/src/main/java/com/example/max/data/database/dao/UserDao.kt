@@ -16,6 +16,9 @@ interface UserDao {
     @Query("SELECT * FROM user_profile WHERE userId = :id")
     fun getProfile(id: String): Flow<UserEntity?>
 
+    @Query("SELECT * FROM user_profile WHERE userId = :id")
+    suspend fun getProfileOnce(id: String): UserEntity?
+
     @Query("SELECT * FROM user_profile ")
     fun getAllUsers(): Flow<List<UserEntity>>
 

@@ -12,8 +12,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatListViewModel @Inject constructor(
     private val interactor: MainInteractor
-): ViewModel(), ChatListUiActionListener {
+) : ViewModel(), ChatListUiActionListener {
 
     private val eventChannel = Channel<ChatListUiEvent>()
     val event: Flow<ChatListUiEvent> = eventChannel.receiveAsFlow()
@@ -34,7 +34,8 @@ class ChatListViewModel @Inject constructor(
                     id = user.userId,
                     name = user.name,
                     avatarUrl = user.avatarUrl,
-                    lastMessage = user.lastMessage ?:"сообщений нет"
+                    lastMessage = user.lastMessage ?: "No messages yet",
+                    threadId = user.threadId
                 )
             }
         }
@@ -57,11 +58,12 @@ class ChatListViewModel @Inject constructor(
         }
     }
 
-    override fun openChat(chatId: String) {
+    override fun openChat(threadId: String, peerUserId: String) {
         viewModelScope.launch {
             eventChannel.send(
                 ChatListUiEvent.OpenChat(
-                    chatId = chatId
+                    threadId = threadId,
+                    peerUserId = peerUserId
                 )
             )
         }

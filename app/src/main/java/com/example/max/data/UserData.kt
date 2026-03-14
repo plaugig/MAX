@@ -5,5 +5,6 @@ data class UserData(
     val name: String,
     val avatarUrl: String?,
     val isMe: Boolean = false,
-    val lastMessage: String?=null
+    val lastMessage: String? = null,
+    val threadId: String? = null
 )

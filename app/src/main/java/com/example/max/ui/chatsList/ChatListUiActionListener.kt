@@ -1,5 +1,5 @@
 package com.example.max.ui.chatsList
 
 interface ChatListUiActionListener {
-    fun openChat(chatId: String)
+    fun openChat(threadId: String, peerUserId: String)
 }

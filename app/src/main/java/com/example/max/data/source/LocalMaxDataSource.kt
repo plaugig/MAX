@@ -32,6 +32,10 @@ class LocalMaxDataSource @Inject constructor(
             .flowOn(Dispatchers.IO)
     }
 
+    suspend fun getProfileOnce(id: String): UserEntity? {
+        return database.userDao().getProfileOnce(id)
+    }
+
     suspend fun saveProfile(save: UserEntity) {
         database.userDao().saveUserProfile(save)
     }

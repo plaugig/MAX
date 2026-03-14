@@ -1,6 +1,7 @@
 package com.example.max.domain
 
 import com.example.max.data.UserData
+import com.example.max.domain.use.cases.CacheContactUseCase
 import com.example.max.domain.use.cases.GetAllRemoteUsersUseCase
 import com.example.max.domain.use.cases.GetChatsUseCase
 import com.example.max.domain.use.cases.GetMessagesUseCase
@@ -17,6 +18,7 @@ class MainInteractor @Inject constructor(
     private val sendMessageUseCase: SendMessageUseCase,
     private val getMessagesUseCase: GetMessagesUseCase,
     private val getChatsUseCase: GetChatsUseCase,
+    private val cacheContactUseCase: CacheContactUseCase,
     private val saveProfileUseCase: SaveProfileUseCase,
     private val getMyProfileUseCase: GetMyProfileUseCase,
     private val getProfileUserUseCase: GetProfileUserUseCase,
@@ -25,9 +27,10 @@ class MainInteractor @Inject constructor(
     suspend fun sendMessage(
         text: String?,
         chatId: String,
+        peerUserId: String,
         imageUrl: String? = null
     ) {
-        sendMessageUseCase(text, chatId, imageUrl)
+        sendMessageUseCase(text, chatId, peerUserId, imageUrl)
     }
 
     fun getMessage(chatId: String, myUid: String): Flow<List<ItemMessageData>> {
@@ -46,11 +49,19 @@ class MainInteractor @Inject constructor(
         saveProfileUseCase(user)
     }
 
+    suspend fun cacheContact(user: UserData) {
+        cacheContactUseCase(user)
+    }
+
     fun getMyProfile(id: String): Flow<UserData?> {
         return getMyProfileUseCase(id)
     }
 
     fun getChatProfile(id: String): Flow<ItemUserData?> {
         return getProfileUserUseCase(id)
+    }
+
+    fun getCurrentUserId(): String {
+        return saveProfileUseCase.getCurrentUserId()
     }
 }

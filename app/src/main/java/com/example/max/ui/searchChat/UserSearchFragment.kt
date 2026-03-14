@@ -55,7 +55,10 @@ class UserSearchFragment: Fragment() {
                             is SearchUiEvent.OpenChat -> {
                                 findNavController().navigate(
                                     R.id.action_userSearchFragment_to_chatFragment,
-                                    bundleOf("chatId" to event.userId)
+                                    bundleOf(
+                                        "threadId" to event.threadId,
+                                        "peerUserId" to event.peerUserId
+                                    )
                                 )
                             }
                         }
