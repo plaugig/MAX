@@ -23,10 +23,9 @@ class RemoteMaxDataSource @Inject constructor(
             .await()
     }
 
-    fun observeMessages(chatId: String): Flow<List<MessageFirebase>> = callbackFlow {
-
+    fun observeMessages(myUid: String, chatId: String): Flow<List<MessageFirebase>> = callbackFlow {
         val chatMessageRef = database.getReference("chats")
-            .child(chatId)
+            .child("$myUid/$chatId")
             .child("messages")
 
         val listener = object : ValueEventListener {

@@ -29,7 +29,7 @@ class MaxRepository @Inject constructor(
     private val storage = FirebaseStorage.getInstance().reference
 
     fun getMessage (chatId: String, myUid: String): Flow<List<MessageData>>{
-        startObservingMessages(chatId)
+        startObservingMessages(myUid, chatId)
 
         return localDataSource.getMessages(chatId).map { entities ->
             entities.map { it.toDomain(myUid)
@@ -91,9 +91,9 @@ class MaxRepository @Inject constructor(
         return userPrefs.getMyID()
     }
 
-    fun startObservingMessages(chatId: String){
+    fun startObservingMessages(myUid: String, chatId: String){
         CoroutineScope(Dispatchers.IO).launch {
-            remoteDataSource.observeMessages(chatId).collect { firebasesMessage ->
+            remoteDataSource.observeMessages(myUid, chatId).collect { firebasesMessage ->
                 firebasesMessage.forEach { msg ->
                     localDataSource.insertMessage(msg.toEntity(chatId))
 

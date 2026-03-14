@@ -50,14 +50,14 @@ class ChatViewModel @Inject constructor(
 
 
     fun sendMessage(text: String) {
-        val currentId = _chatId.value ?: return
+        val currentId = chatId
         viewModelScope.launch {
             interactor.sendMessage(text, currentId)
         }
     }
 
     fun sendImageMessage(uri: String) {
-        val currentChatId = _chatId.value ?: return
+        val currentChatId = chatId
 
         viewModelScope.launch {
             interactor.sendMessage(
