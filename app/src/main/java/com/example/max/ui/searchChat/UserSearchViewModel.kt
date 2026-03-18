@@ -14,6 +14,9 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -27,11 +30,11 @@ class UserSearchViewModel @Inject constructor(
 
     private val _event = MutableSharedFlow<SearchUiEvent>()
     val event: SharedFlow<SearchUiEvent> = _event.asSharedFlow()
-    private val currentUserId = interactor.getCurrentUserId()
+         private val currentUserId = interactor.getCurrentUserId()
 
     val users: StateFlow<List<ItemUserData>> = interactor.getAllRemoteUsers()
-        .map { userList ->
-            userList.filterNot { user -> user.id == currentUserId }
+        .combine(currentUserId){ userList, userId ->
+            userList.filterNot { it.id == userId }
         }
         .stateIn(
             scope = viewModelScope,
@@ -41,6 +44,7 @@ class UserSearchViewModel @Inject constructor(
 
     override fun openChat(user: ItemUserData) {
         viewModelScope.launch(Dispatchers.IO) {
+            val userId = currentUserId.first()
             interactor.cacheContact(
                 user = UserData(
                     userId = user.id,
@@ -49,7 +53,8 @@ class UserSearchViewModel @Inject constructor(
                     lastMessage = null
                 )
             )
-            val threadId = DirectChatThreadId.from(currentUserId, user.id)
+
+            val threadId = DirectChatThreadId.from(userId, user.id)
 
             _event.emit(
                 SearchUiEvent.OpenChat(

@@ -58,7 +58,8 @@ dependencies {
     // coil
     implementation(libs.coil)
 
-
+    // dataStore
+    implementation(libs.androidx.datastore.preferences)
 
     // Hilt
     implementation(libs.hilt.android)

@@ -16,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -44,23 +45,26 @@ class MaxRepository @Inject constructor(
     }
 
     fun getChats(): Flow<List<UserData>> {
-        val currentUserId = userPrefs.getMyID()
-        if (currentUserId.isBlank()) return flowOf(emptyList())
-
-        return remoteDataSource.observeUserChats(currentUserId).map { userChats ->
-            userChats
-                .sortedByDescending(UserChatFirebase::lastTimestamp)
-                .map { chat ->
-                    UserData(
-                        userId = chat.peerUserId,
-                        name = chat.peerName,
-                        avatarUrl = chat.peerAvatarUrl,
-                        lastMessage = chat.lastMessage,
-                        threadId = chat.threadId
-                    ).also { userData ->
-                        cacheContact(userData)
-                    }
+       return userPrefs.getMyID().flatMapLatest{ currentUserId ->
+            if (currentUserId.isBlank() || currentUserId == "default"){
+                flowOf(emptyList())
+            } else {
+                remoteDataSource.observeUserChats(currentUserId).map { userChats ->
+                    userChats
+                        .sortedByDescending(UserChatFirebase::lastTimestamp)
+                        .map { chat ->
+                            UserData(
+                                userId = chat.peerUserId,
+                                name = chat.peerName,
+                                avatarUrl = chat.peerAvatarUrl,
+                                lastMessage = chat.lastMessage,
+                                threadId = chat.threadId
+                            ).also { userData ->
+                                cacheContact(userData)
+                            }
+                        }
                 }
+            }
         }
     }
 
@@ -121,19 +125,41 @@ class MaxRepository @Inject constructor(
         localDataSource.updateLastMessage(peerUserId, previewText)
     }
 
-    suspend fun saveProfile(userData: UserData) {
-        val entity = userData.toEntity()
-        localDataSource.saveProfile(entity)
+    suspend fun singUp(email: String, password: String, name: String){
+        val firebaseUser = remoteDataSource.singUp(email,password)
 
-        val firebase = userData.toFirebaseUser()
-        remoteDataSource.saveUserToFirebase(firebase)
+        firebaseUser?.let { user ->
+            val userData = UserData(
+                userId = user.uid,
+                name = name,
+                avatarUrl = null
+            )
+            remoteDataSource.saveUserToFirebase(userData.toFirebaseUser())
+            localDataSource.saveProfile(userData.toEntity())
+            userPrefs.saveMyId(user.uid)
+        }
     }
+
+    suspend fun singIn(email: String, password: String){
+        val firebaseUser = remoteDataSource.singIn(email,password)
+
+        firebaseUser?.let { user ->
+            val remoteProfile = remoteDataSource.downloadProfile(user.uid)
+
+            remoteProfile?.let { profile ->
+                localDataSource.saveProfile(profile.toDomain().toEntity())
+            }
+            userPrefs.saveMyId(user.uid)
+        }
+    }
+
+
 
     suspend fun cacheContact(userData: UserData) {
         localDataSource.saveProfile(userData.toEntity())
     }
 
-    fun getCurrentUserIdFromPrefs(): String {
+    fun getCurrentUserIdFromPrefs(): Flow<String> {
         return userPrefs.getMyID()
     }
 
@@ -146,4 +172,5 @@ class MaxRepository @Inject constructor(
             }
         }
     }
+
 }

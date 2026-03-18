@@ -1,4 +1,4 @@
-package com.example.max.ui.registration
+package com.example.max.ui.entrance.autorization
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,26 +12,25 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.max.R
-import com.example.max.databinding.RegistrationFragmentBinding
+import com.example.max.databinding.AuthorizationFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class RegistrationFragment : Fragment() {
+class AuthorizationFragment: Fragment() {
 
-    private var _binding: RegistrationFragmentBinding? = null
+    private var _binding: AuthorizationFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: RegistrationViewModel by viewModels()
-
+    private val viewModel: AuthorizationViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = RegistrationFragmentBinding.inflate(inflater, container, false)
+        _binding = AuthorizationFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -46,28 +45,34 @@ class RegistrationFragment : Fragment() {
 
                 launch {
                     viewModel.event.collect { event ->
-                        when (event) {
-                            is RegistrationEvent.EmptyName -> {
-                                binding.inputNameLayout.error = getString(R.string.error)
+                        when(event){
+
+                            is AuthorizationEvent.EmptyFields -> {
+                                showError(getString(R.string.error_aut))
                             }
 
-                            is RegistrationEvent.Error -> {
+                            is AuthorizationEvent.Error ->{
                                 showError(event.message)
                             }
 
-                            is RegistrationEvent.CompleteRegistration -> {
+                            is AuthorizationEvent.CompleteAuthorization -> {
                                 findNavController().navigate(R.id.chatsListFragment)
                             }
+
                         }
                     }
                 }
             }
         }
-
         binding.singIn.setOnClickListener {
-            viewModel.signIn(
-                name = binding.etName.text.toString()
+            viewModel.singIn(
+                email = binding.etEmail.text.toString(),
+                password = binding.etPassword.text.toString()
             )
+        }
+
+        binding.btnBack.setOnClickListener {
+            findNavController().navigate(R.id.registrationFragment)
         }
     }
 
@@ -78,7 +83,6 @@ class RegistrationFragment : Fragment() {
             Toast.LENGTH_SHORT
         ).show()
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

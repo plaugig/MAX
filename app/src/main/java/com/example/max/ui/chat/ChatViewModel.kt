@@ -9,6 +9,8 @@ import com.example.max.ui.common.ItemUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,14 +30,17 @@ class ChatViewModel @Inject constructor(
 
     private val currentUserId = interactor.getCurrentUserId()
 
-    val message: StateFlow<List<ItemMessageData>> = interactor.getMessage(
-        chatId = threadId,
-        myUid = currentUserId
-    ).stateIn(
+    val message: StateFlow<List<ItemMessageData>> = currentUserId.flatMapLatest { userId ->
+        interactor.getMessage(
+            chatId = threadId,
+            myUid = userId
+        )
+    } .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
     )
+
 
     val chatUser: StateFlow<ItemUserData?> = interactor.getChatProfile(
         id = peerUserId
@@ -65,4 +70,6 @@ class ChatViewModel @Inject constructor(
             )
         }
     }
+
+
 }

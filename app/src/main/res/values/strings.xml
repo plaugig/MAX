@@ -7,5 +7,10 @@
     <string name="hello">Выкладывай кто ты блять такой</string>
     <string name="go">Начать долбить ass</string>
     <string name="name">Твое имя</string>
-    <string name="error">уебище ты имя не ввел!! </string>
+    <string name="error_reg">ты ввел не существующую почту  </string>
+    <string name="error_aut">не правильная почта или пароль </string>
+    <string name="password"> пароль </string>
+    <string name="email"> пошта? </string>
+    <string name="auoriz"> местный я </string>
+    <string name="title_autoriz"> точно местный или пиздишь ?  </string>
 </resources>

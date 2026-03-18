@@ -1,5 +1,7 @@
 package com.example.max.data.remote
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -11,7 +13,8 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class RemoteMaxDataSource @Inject constructor(
-    private val database: FirebaseDatabase
+    private val database: FirebaseDatabase,
+    private val auth: FirebaseAuth
 ) {
 
     suspend fun sendMessage(
@@ -109,10 +112,30 @@ class RemoteMaxDataSource @Inject constructor(
         }
     }
 
-    suspend fun saveUserToFirebase(user: UserFirebase) {
+    suspend fun singUp (email: String, password: String): FirebaseUser? {
+        return auth.createUserWithEmailAndPassword(email, password).await().user
+    }
+
+    suspend fun singIn(email: String, password: String): FirebaseUser?{
+        return auth.signInWithEmailAndPassword(email,password).await().user
+    }
+
+    suspend fun saveUserToFirebase (user: UserFirebase){
         database.getReference("users")
             .child(user.userId)
             .setValue(user)
             .await()
     }
+
+    suspend fun downloadProfile(uid: String): UserFirebase?{
+        val snapshot = database.getReference("users")
+            .child(uid)
+            .get()
+            .await()
+
+        return snapshot.getValue(UserFirebase :: class.java)
+    }
+
+
+
 }

@@ -32,9 +32,13 @@
 
     <fragment
         android:id="@+id/registrationFragment"
-        android:name="com.example.max.ui.registration.RegistrationFragment"
+        android:name="com.example.max.ui.entrance.registration.RegistrationFragment"
         android:label="Registration"
-        tools:layout="@layout/registration_fragment" />
+        tools:layout="@layout/authorization_fragment" >
+        <action
+            android:id="@+id/action_registrationFragment_to_authorizationFragment"
+            app:destination="@id/authorizationFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/userSearchFragment"
@@ -47,5 +51,11 @@
             app:popUpTo="@id/userSearchFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
+    <fragment android:id="@+id/authorizationFragment"
+        android:name="com.example.max.ui.entrance.autorization.AuthorizationFragment"
+        android:label="autorization"
+        tools:layout="@layout/authorization_fragment">
+</fragment>
 
 </navigation>
