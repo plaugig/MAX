@@ -50,4 +50,11 @@ class LocalMaxDataSource @Inject constructor(
         database.userDao().updateLastMessage(userId, messageText)
     }
 
+    suspend fun clearAllMessages(){
+        database.messageDao().clearAllMessages()
+    }
+
+    suspend fun syncChats(chatId: String, message: List<MessageEntity> ){
+        database.messageDao().syncChat(chatId,message)
+    }
 }

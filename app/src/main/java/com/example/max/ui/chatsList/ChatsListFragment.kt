@@ -88,6 +88,13 @@ class ChatsListFragment : Fragment() {
                 R.id.action_chatsListFragment_to_userSearchFragment
             )
         }
+
+        binding.backButton.setOnClickListener {
+            viewModel.clearMessages()
+            findNavController().navigate(
+                R.id.registrationFragment
+            )
+        }
     }
 
     override fun onDestroyView() {

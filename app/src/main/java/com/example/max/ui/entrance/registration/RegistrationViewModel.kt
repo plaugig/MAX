@@ -35,7 +35,7 @@ class RegistrationViewModel @Inject constructor(
             )
         }
 
-            val trimmedName = name.trim()
+        val trimmedName = name.trim()
         val trimmedEmail = email.trim()
         val trimmedPassword = password.trim()
 

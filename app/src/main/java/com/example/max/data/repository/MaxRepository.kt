@@ -166,11 +166,15 @@ class MaxRepository @Inject constructor(
     fun startObservingMessages(chatId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             remoteDataSource.observeMessages(chatId).collect { firebasesMessage ->
-                firebasesMessage.forEach { msg ->
-                    localDataSource.insertMessage(msg.toEntity(chatId))
+                val entities = firebasesMessage.map {
+                    it.toEntity(chatId)
                 }
+                localDataSource.syncChats(chatId, entities)
             }
         }
     }
 
+    suspend fun clearAllMessage(){
+        localDataSource.clearAllMessages()
+    }
 }

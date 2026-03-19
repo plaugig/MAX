@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.example.max.data.database.entities.MessageEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,4 +19,19 @@ interface MessageDao {
 
     @Query("UPDATE messages SET isSent = 1 WHERE id = :messageId")
     suspend fun markAsSent(messageId: String)
+
+    @Query("DELETE FROM messages")
+    suspend fun clearAllMessages()
+
+    @Query("DELETE FROM messages WHERE chatId = :chatId")
+    suspend fun deleteMessage(chatId: String )
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMessages(massage: List<MessageEntity>)
+
+    @Transaction
+    suspend fun syncChat(chatId: String, message: List<MessageEntity>){
+        deleteMessage(chatId)
+        insertMessages(message)
+    }
 }

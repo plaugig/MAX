@@ -2,6 +2,7 @@ package com.example.max.domain
 
 import com.example.max.data.UserData
 import com.example.max.domain.use.cases.CacheContactUseCase
+import com.example.max.domain.use.cases.ClearAllMessagesUseCase
 import com.example.max.domain.use.cases.GetAllRemoteUsersUseCase
 import com.example.max.domain.use.cases.GetChatsUseCase
 import com.example.max.domain.use.cases.GetCurrentUserIdUserCase
@@ -26,7 +27,8 @@ class MainInteractor @Inject constructor(
     private val singUpUseCase: SingInUseCase,
     private val singInUseCase: SingUpUseCase,
     private val getAllRemoteUsersUseCase: GetAllRemoteUsersUseCase,
-    private val getCurrentUserIdUserCase: GetCurrentUserIdUserCase
+    private val getCurrentUserIdUserCase: GetCurrentUserIdUserCase,
+    private val clearAllMessagesUseCase: ClearAllMessagesUseCase
 ) {
     suspend fun sendMessage(
         text: String?,
@@ -71,5 +73,9 @@ class MainInteractor @Inject constructor(
 
     fun getCurrentUserId(): Flow<String> {
         return getCurrentUserIdUserCase.getCurrentUserId()
+    }
+
+    suspend fun clearAllMessages(){
+        clearAllMessagesUseCase.clearAllMessages()
     }
 }
