@@ -6,11 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.max.domain.MainInteractor
 import com.example.max.ui.common.ItemUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -18,26 +23,37 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val interactor: MainInteractor,
     savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
+
+    private val peerUserId: String? = savedStateHandle.get<String>("userId")
+
+    private val _state = MutableStateFlow(ProfileUiState())
+    val state: Flow<ProfileUiState> get() = _state
 
 
+    init {
+        sync()
+    }
 
-private val peerUserId: String? = savedStateHandle.get<String>("userId")
-
-    val profile: StateFlow<ItemUserData?> = flow<ItemUserData?> {
-        if (peerUserId != null){
-            emitAll(interactor.getChatProfile(peerUserId))
+    private fun sync() = viewModelScope.launch(Dispatchers.IO) {
+        val flow = if (peerUserId != null) {
+            interactor.getChatProfile(peerUserId)
         } else {
-            emitAll(interactor.getMyProfile())
+            interactor.getMyProfile()
         }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = null
-    )
+
+        flow.collect { profile ->
+            _state.update { state ->
+                state.copy(
+                    profile = profile,
+                    isCurrentProfile = peerUserId.isNullOrBlank()
+                )
+            }
+        }
+    }
 
 
-    suspend fun clearAllMessages(){
+    fun clearAllMessages() = viewModelScope.launch(Dispatchers.IO) {
         interactor.clearAllMessages()
     }
 }
