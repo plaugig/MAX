@@ -159,7 +159,7 @@ class MaxRepository @Inject constructor(
         localDataSource.saveProfile(userData.toEntity())
     }
 
-    fun getCurrentUserIdFromPrefs(): Flow<String> {
+    fun getCurrentUserId(): Flow<String> {
         return userPrefs.getMyID()
     }
 

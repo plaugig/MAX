@@ -11,23 +11,24 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
-val Context.dataStore by preferencesDataStore(name = "user_settings")
+private val KEY_MY_ID = stringPreferencesKey("my_personal_id")
 
+@Singleton
 class UserPrefs @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
-    val KEY_MY_ID = stringPreferencesKey("my_personal_id")
+
+    private val Context.dataStore by preferencesDataStore(name = "user_settings")
+
     suspend fun saveMyId(id: String) {
         context.dataStore.edit { prefs ->
             prefs[KEY_MY_ID] = id
         }
     }
-    fun getMyID(): Flow<String> {
-       return context.dataStore.data
-            .map { prefs ->
-                prefs[KEY_MY_ID] ?: "default"
-            }
-    }
 
+    fun getMyID(): Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[KEY_MY_ID] ?: "default"
+    }
 }

@@ -17,7 +17,7 @@ class SendMessageUseCase @Inject constructor(
     ) {
         if (text.isNullOrBlank() && imageUrl == null) return
 
-        val myUid = repository.getCurrentUserIdFromPrefs().first()
+        val myUid = repository.getCurrentUserId().first()
 
         val newMessage = MessageData(
             id = UUID.randomUUID().toString(),

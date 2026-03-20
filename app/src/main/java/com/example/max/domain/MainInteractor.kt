@@ -5,7 +5,7 @@ import com.example.max.domain.use.cases.CacheContactUseCase
 import com.example.max.domain.use.cases.ClearAllMessagesUseCase
 import com.example.max.domain.use.cases.GetAllRemoteUsersUseCase
 import com.example.max.domain.use.cases.GetChatsUseCase
-import com.example.max.domain.use.cases.GetCurrentUserIdUserCase
+import com.example.max.domain.use.cases.GetCurrentUserIdUseCase
 import com.example.max.domain.use.cases.GetMessagesUseCase
 import com.example.max.domain.use.cases.GetMyProfileUseCase
 import com.example.max.domain.use.cases.GetProfileUserUseCase
@@ -27,7 +27,7 @@ class MainInteractor @Inject constructor(
     private val singUpUseCase: SingInUseCase,
     private val singInUseCase: SingUpUseCase,
     private val getAllRemoteUsersUseCase: GetAllRemoteUsersUseCase,
-    private val getCurrentUserIdUserCase: GetCurrentUserIdUserCase,
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val clearAllMessagesUseCase: ClearAllMessagesUseCase
 ) {
     suspend fun sendMessage(
@@ -72,7 +72,7 @@ class MainInteractor @Inject constructor(
     }
 
     fun getCurrentUserId(): Flow<String> {
-        return getCurrentUserIdUserCase.getCurrentUserId()
+        return getCurrentUserIdUseCase.getCurrentUserId()
     }
 
     suspend fun clearAllMessages(){

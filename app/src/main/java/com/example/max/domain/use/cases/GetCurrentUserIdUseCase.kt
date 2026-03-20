@@ -4,10 +4,10 @@ import com.example.max.data.repository.MaxRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetCurrentUserIdUserCase @Inject constructor(
+class GetCurrentUserIdUseCase @Inject constructor(
     private val maxRepository: MaxRepository
 ){
     fun getCurrentUserId(): Flow<String>{
-       return maxRepository.getCurrentUserIdFromPrefs()
+       return maxRepository.getCurrentUserId()
     }
 }
