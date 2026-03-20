@@ -18,6 +18,7 @@ import coil.transform.CircleCropTransformation
 import com.example.max.R
 import com.example.max.databinding.ChatFragmentBinding
 import com.example.max.ui.chat.bottom.sheet.AttachmentBottomSheet
+import com.example.max.ui.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -110,7 +111,7 @@ class ChatFragment : Fragment() {
             val userId = viewModel.getPeerUserId()
             findNavController().navigate(
                 R.id.profileFragment,
-                bundleOf("userId" to userId)
+                bundleOf(Constants.USER_ID to userId)
             )
         }
     }

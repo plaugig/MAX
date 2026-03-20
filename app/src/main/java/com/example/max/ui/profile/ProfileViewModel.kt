@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.max.domain.MainInteractor
 import com.example.max.ui.common.ItemUserData
+import com.example.max.ui.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +26,7 @@ class ProfileViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val peerUserId: String? = savedStateHandle.get<String>("userId")
+    private val peerUserId: String? = savedStateHandle.get<String>(Constants.USER_ID)
 
     private val _state = MutableStateFlow(ProfileUiState())
     val state: Flow<ProfileUiState> get() = _state
