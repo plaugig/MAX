@@ -68,10 +68,4 @@ class ChatListViewModel @Inject constructor(
             )
         }
     }
-
-    fun clearMessages(){
-        viewModelScope.launch {
-            interactor.clearAllMessages()
-        }
-    }
 }

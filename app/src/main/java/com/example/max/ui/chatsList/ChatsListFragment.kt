@@ -90,9 +90,8 @@ class ChatsListFragment : Fragment() {
         }
 
         binding.backButton.setOnClickListener {
-            viewModel.clearMessages()
             findNavController().navigate(
-                R.id.registrationFragment
+                R.id.profileFragment
             )
         }
     }

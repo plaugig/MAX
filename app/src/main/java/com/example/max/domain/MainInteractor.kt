@@ -55,8 +55,8 @@ class MainInteractor @Inject constructor(
         cacheContactUseCase(user)
     }
 
-    fun getMyProfile(id: String): Flow<UserData?> {
-        return getMyProfileUseCase(id)
+    fun getMyProfile(): Flow<ItemUserData?> {
+        return getMyProfileUseCase()
     }
 
     fun getChatProfile(id: String): Flow<ItemUserData?> {

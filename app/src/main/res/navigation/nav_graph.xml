@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_chatsListFragment_to_userSearchFragment"
             app:destination="@id/userSearchFragment" />
+        <action
+            android:id="@+id/action_chatsListFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
     <fragment
@@ -50,6 +53,9 @@
             app:destination="@id/chatFragment"
             app:popUpTo="@id/userSearchFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_userSearchFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
     <fragment android:id="@+id/authorizationFragment"
@@ -57,5 +63,11 @@
         android:label="autorization"
         tools:layout="@layout/authorization_fragment">
 </fragment>
+
+    <fragment android:id="@+id/profileFragment"
+        android:name="com.example.max.ui.profile.ProfileFragment"
+        android:label="profile"
+        tools:layout="@layout/profile_fragment">
+    </fragment>
 
 </navigation>

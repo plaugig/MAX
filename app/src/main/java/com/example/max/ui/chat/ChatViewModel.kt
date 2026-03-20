@@ -30,6 +30,8 @@ class ChatViewModel @Inject constructor(
 
     private val currentUserId = interactor.getCurrentUserId()
 
+    fun getPeerUserId(): String = peerUserId
+
     val message: StateFlow<List<ItemMessageData>> = currentUserId.flatMapLatest { userId ->
         interactor.getMessage(
             chatId = threadId,

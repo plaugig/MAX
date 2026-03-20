@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class ChatFragment: Fragment() {
+class ChatFragment : Fragment() {
 
     private var _binding: ChatFragmentBinding? = null
     private val binding get() = _binding!!
@@ -45,11 +46,11 @@ class ChatFragment: Fragment() {
         setupRecyclerView()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.message.collect { list ->
                     chatAdapter.submitList(list)
 
-                    if(list.isNotEmpty()){
+                    if (list.isNotEmpty()) {
                         binding.massageRV.scrollToPosition(list.size - 1)
                     }
                 }
@@ -61,7 +62,7 @@ class ChatFragment: Fragment() {
                 user?.let {
                     binding.name.text = it.name
 
-                    binding.avatar.load(it.avatarUrl){
+                    binding.avatar.load(it.avatarUrl) {
                         crossfade(true)
                         placeholder(R.drawable.lox)
                         error(R.drawable.lox)
@@ -92,8 +93,8 @@ class ChatFragment: Fragment() {
         binding.sendMassage.setOnClickListener {
             val text = binding.enteringMessages.text.toString()
 
-            if(text.isNotBlank() || selectedImageUri != null){
-                if (selectedImageUri != null){
+            if (text.isNotBlank() || selectedImageUri != null) {
+                if (selectedImageUri != null) {
                     viewModel.sendImageMessage(selectedImageUri!!)
                 } else {
                     viewModel.sendMessage(text)
@@ -104,8 +105,17 @@ class ChatFragment: Fragment() {
                 selectedImageUri = null
             }
         }
+
+        binding.avatar.setOnClickListener {
+            val userId = viewModel.getPeerUserId()
+            findNavController().navigate(
+                R.id.profileFragment,
+                bundleOf("userId" to userId)
+            )
+        }
     }
-    private fun setupRecyclerView(){
+
+    private fun setupRecyclerView() {
         binding.massageRV.apply {
             adapter = chatAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -114,7 +124,7 @@ class ChatFragment: Fragment() {
 
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
-    ){ uri ->
+    ) { uri ->
         uri?.let {
             selectedImageUri = it.toString()
             binding.previewContainer.visibility = View.VISIBLE
